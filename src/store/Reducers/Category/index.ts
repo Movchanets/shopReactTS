@@ -17,5 +17,5 @@ export const categoryReducer = (state = initialState, action: any): ICategorySta
 			};
 		default:
 			return state;
-	}
-}
+	};
+};

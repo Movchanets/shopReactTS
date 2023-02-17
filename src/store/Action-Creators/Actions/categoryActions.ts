@@ -1,9 +1,9 @@
-import { CategoryActions, CommonActions, CategoryActionTypes, ICategory } from './../../Types/index';
+import { CategoryActions, CommonActions, CategoryActionTypes, ICategory, ICategoryDTO } from './../../Types/index';
 import { toast } from 'react-toastify';
 
 import { Dispatch } from "redux";
 import { CommonActionTypes } from '../../Types';
-import { CategoriesGet } from '../../../axios/CategoryController';
+import { CategoriesCreate, CategoriesGet } from '../../../axios/CategoryController';
 
 export const Categories = () => {
 	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
@@ -33,3 +33,26 @@ export const Categories = () => {
 		}
 	};
 };
+export const CreateCategories = (category: ICategoryDTO) => {
+	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
+		try {
+			dispatch({ type: CommonActionTypes.START_REQUEST, payload: "Loading" });
+			const data = await CategoriesCreate(category);
+
+			const res: ICategory = data;
+
+			dispatch({
+				type: CategoryActionTypes.CREATE_CATEGORY_SUCCESS,
+				message: "Category created",
+				category: res
+			});
+			toast.success("Category created");
+		}
+		catch (e) {
+			dispatch({
+				type: CommonActionTypes.SERVER_USER_ERROR,
+				payload: 'Виникла помилка',
+			});
+		}
+	};
+}

@@ -1,3 +1,4 @@
+import { ICategoryDTO } from './../store/Types/index';
 
 import axios from "axios";
 
@@ -21,11 +22,24 @@ const requests = {
 };
 
 const Categories = {
-
+	createCategory: (category: ICategoryDTO) => requests.post(`/create`, category),
 	getCategories: () => requests.get(`/get`),
 	deleteCategory: () => requests.get(`/`),
 }
+export async function CategoriesCreate(category: ICategoryDTO) {
 
+	const data = await Categories.createCategory(category)
+		.then((response) => {
+			return {
+				response,
+			};
+		})
+		.catch((error) => {
+			return error.response;
+		});
+	return data;
+
+}
 export async function CategoriesGet() {
 
 	const data = await Categories.getCategories()

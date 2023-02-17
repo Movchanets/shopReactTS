@@ -19,9 +19,7 @@ const Shop: React.FC = () => {
 	useEffect(() => { Categories() }, []);
 
 
-	function uuidv4(): React.Key | null | undefined {
-		throw new Error('Function not implemented.');
-	}
+
 
 	return (
 
@@ -132,6 +130,7 @@ const Shop: React.FC = () => {
 			</Paper>
 
 		</Container >
+
 	);
 }
 export default Shop;

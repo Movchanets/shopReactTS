@@ -7,16 +7,21 @@ export enum CommonActionTypes {
 export enum CategoryActionTypes {
 
 	GET_CATEGORIES_SUCCESS = "GET_CATEGORIES_SUCCESS",
+	CREATE_CATEGORY_SUCCESS = "CREATE_CATEGORY_SUCCESS",
+}
+interface CreateCategoryActionSuccess {
+	type: CategoryActionTypes.CREATE_CATEGORY_SUCCESS,
+	message: any,
+	category: ICategory
 
 }
-
 interface GetCategoriesActionSuccess {
 	type: CategoryActionTypes.GET_CATEGORIES_SUCCESS,
 	message: any,
 	categories: Array<ICategory>
 }
 
-export type CategoryActions = GetCategoriesActionSuccess;
+export type CategoryActions = GetCategoriesActionSuccess | CreateCategoryActionSuccess;
 
 interface Error_MSG {
 	type: CommonActionTypes.ERROR_MSG,
@@ -33,6 +38,20 @@ interface ServerUserErrorAction {
 export interface ICategory {
 	id: number
 	name: string
+}
+export interface ICategoryDTO {
+
+	name: string
+}
+export interface ILogin {
+	email: string,
+	password: string,
+
+}
+export interface IRegister {
+	email: string,
+	password: string,
+	confirmPassword: string
 }
 export interface ICategoryState {
 	categories: Array<ICategory> | null
