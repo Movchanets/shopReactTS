@@ -6,8 +6,9 @@ import { Route, Routes } from 'react-router-dom';
 import Shop from './components/Shop';
 import DefaultLayout from './components/Containers/default';
 import Login from './components/Login';
-import CreateCategory from './components/CreateCategory';
+import CreateCategory from './components/Category';
 import Register from './components/Register';
+import NotFound from './components/NotFound';
 
 
 
@@ -22,6 +23,7 @@ function App() {
         <Route path='Category' element={<CreateCategory />} />
 
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

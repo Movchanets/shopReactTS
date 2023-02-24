@@ -24,7 +24,7 @@ const requests = {
 const Categories = {
 	createCategory: (category: ICategoryDTO) => requests.post(`/create`, category),
 	getCategories: () => requests.get(`/get`),
-	deleteCategory: () => requests.get(`/`),
+	deleteCategory: (id: number) => requests.del(`/delete/${id}`),
 }
 export async function CategoriesCreate(category: ICategoryDTO) {
 
@@ -43,6 +43,19 @@ export async function CategoriesCreate(category: ICategoryDTO) {
 export async function CategoriesGet() {
 
 	const data = await Categories.getCategories()
+		.then((response) => {
+			return {
+				response,
+			};
+		})
+		.catch((error) => {
+			return error.response;
+		});
+	return data;
+}
+export async function CategoriesDelete(id: number) {
+
+	const data = await Categories.deleteCategory(id)
 		.then((response) => {
 			return {
 				response,

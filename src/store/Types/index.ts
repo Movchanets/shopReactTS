@@ -6,6 +6,7 @@ export enum CommonActionTypes {
 }
 export enum CategoryActionTypes {
 
+	DELETE_CATEGORIES_SUCCESS = "DELETE_CATEGORIES_SUCCESS",
 	GET_CATEGORIES_SUCCESS = "GET_CATEGORIES_SUCCESS",
 	CREATE_CATEGORY_SUCCESS = "CREATE_CATEGORY_SUCCESS",
 }
@@ -15,13 +16,19 @@ interface CreateCategoryActionSuccess {
 	category: ICategory
 
 }
+interface DeleteCategoryActionSuccess {
+	type: CategoryActionTypes.DELETE_CATEGORIES_SUCCESS,
+	message: any,
+}
+
 interface GetCategoriesActionSuccess {
 	type: CategoryActionTypes.GET_CATEGORIES_SUCCESS,
 	message: any,
 	categories: Array<ICategory>
 }
-
-export type CategoryActions = GetCategoriesActionSuccess | CreateCategoryActionSuccess;
+export type CategoryActions = GetCategoriesActionSuccess
+	| CreateCategoryActionSuccess
+	| DeleteCategoryActionSuccess;
 
 interface Error_MSG {
 	type: CommonActionTypes.ERROR_MSG,
@@ -38,10 +45,13 @@ interface ServerUserErrorAction {
 export interface ICategory {
 	id: number
 	name: string
+	description: string
+	urlImage: string
 }
 export interface ICategoryDTO {
-
 	name: string
+	base64: string
+	description: string
 }
 export interface ILogin {
 	email: string,
@@ -54,11 +64,11 @@ export interface IRegister {
 	confirmPassword: string
 }
 export interface ICategoryState {
-	categories: Array<ICategory> | null
+	categories: Array<ICategory>
 	loading: boolean
 	message: string
 }
 export type CommonActions = Error_MSG
 	| ServerUserErrorAction
 	| StartRequest
-
+export const ImageBase = "http://localhost:8080/files/";

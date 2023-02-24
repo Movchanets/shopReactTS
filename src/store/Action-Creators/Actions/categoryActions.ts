@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 import { Dispatch } from "redux";
 import { CommonActionTypes } from '../../Types';
-import { CategoriesCreate, CategoriesGet } from '../../../axios/CategoryController';
+import { CategoriesCreate, CategoriesDelete, CategoriesGet } from '../../../axios/CategoryController';
 
 export const Categories = () => {
 	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
@@ -47,6 +47,25 @@ export const CreateCategories = (category: ICategoryDTO) => {
 				category: res
 			});
 			toast.success("Category created");
+		}
+		catch (e) {
+			dispatch({
+				type: CommonActionTypes.SERVER_USER_ERROR,
+				payload: 'Виникла помилка',
+			});
+		}
+	};
+}
+export const DeleteCategory = (id: number) => {
+	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
+		try {
+			dispatch({ type: CommonActionTypes.START_REQUEST, payload: "Loading" });
+			const data = await CategoriesDelete(id);
+			dispatch({
+				type: CategoryActionTypes.DELETE_CATEGORIES_SUCCESS,
+				message: "Category deleted",
+			});
+			toast.success("Category deleted");
 		}
 		catch (e) {
 			dispatch({

@@ -24,4 +24,5 @@ export const RegisterSchema = Yup.object().shape({
 });
 export const CategorySchema = Yup.object().shape({
 	name: Yup.string().required("Required").label('Category name').min(3, "Category name must be at least 3 characters").max(50, "Category name must be at most 50 characters"),
+	description: Yup.string().required("Required").label('Category description').min(10, "Category description must be at least 10 characters").max(100, "Category description must be at most 100 characters"),
 });
