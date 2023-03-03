@@ -1,3 +1,4 @@
+
 import { ICategoryDTO } from './../store/Types/index';
 
 import axios from "axios";
@@ -14,8 +15,8 @@ const requests = {
 	get: (url: string) => instance.get(url).then().then(responseBody),
 	post: (url: string, body?: any) =>
 		instance.post(url, body).then().then(responseBody),
-	put: (url: string, body?: string) =>
-		instance.put(url, body).then().then(responseBody),
+	put: (url: string, data: any) =>
+		instance.put(url, data).then().then(responseBody),
 	patch: (url: string, body: string) =>
 		instance.patch(url, body).then().then(responseBody),
 	del: (url: string) => instance.delete(url).then().then(responseBody),
@@ -24,11 +25,42 @@ const requests = {
 const Categories = {
 	createCategory: (category: ICategoryDTO) => requests.post(`/create`, category),
 	getCategories: () => requests.get(`/get`),
+	getCategory: (id: number) => requests.get(`/get/${id}`),
 	deleteCategory: (id: number) => requests.del(`/delete/${id}`),
+	editCategory: (id: number, category: ICategoryDTO) => requests.put(`/edit/${id}`,
+		{ name: category.name, description: category.description, base64: category.base64, }),
+}
+export async function CategoryGet(id: number) {
+
+	const data = await Categories.getCategory(id)
+		.then((response) => {
+			return {
+				response,
+			};
+		})
+		.catch((error) => {
+			return error.response;
+		});
+	return data;
+
 }
 export async function CategoriesCreate(category: ICategoryDTO) {
 
 	const data = await Categories.createCategory(category)
+		.then((response) => {
+			return {
+				response,
+			};
+		})
+		.catch((error) => {
+			return error.response;
+		});
+	return data;
+
+}
+export async function CategoriesEdit(id: number, category: ICategoryDTO) {
+
+	const data = await Categories.editCategory(id, category)
 		.then((response) => {
 			return {
 				response,

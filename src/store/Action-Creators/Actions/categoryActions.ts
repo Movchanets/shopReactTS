@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 import { Dispatch } from "redux";
 import { CommonActionTypes } from '../../Types';
-import { CategoriesCreate, CategoriesDelete, CategoriesGet } from '../../../axios/CategoryController';
+import { CategoriesCreate, CategoriesDelete, CategoriesEdit, CategoriesGet, CategoryGet } from '../../../axios/CategoryController';
 
 export const Categories = () => {
 	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
@@ -33,6 +33,30 @@ export const Categories = () => {
 		}
 	};
 };
+export const GetCategory = (id: number) => {
+	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
+		try {
+
+			dispatch({ type: CommonActionTypes.START_REQUEST, payload: "Loading" });
+			const data = await CategoryGet(id);
+			const { response } = data;
+			const res: ICategory = response;
+			console.log(response)
+			dispatch({
+				type: CategoryActionTypes.GET_CATEGORY_SUCCESS,
+				message: "Category loaded",
+				category: res
+			});
+		}
+		catch (e) {
+			console.log(e)
+			dispatch({
+				type: CommonActionTypes.SERVER_USER_ERROR,
+				payload: 'Виникла помилка',
+			});
+		}
+	};
+};
 export const CreateCategories = (category: ICategoryDTO) => {
 	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
 		try {
@@ -47,6 +71,27 @@ export const CreateCategories = (category: ICategoryDTO) => {
 				category: res
 			});
 			toast.success("Category created");
+		}
+		catch (e) {
+			dispatch({
+				type: CommonActionTypes.SERVER_USER_ERROR,
+				payload: 'Виникла помилка',
+			});
+		}
+	};
+}
+export const EditCategories = (id: number, category: ICategoryDTO) => {
+	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
+		try {
+			dispatch({ type: CommonActionTypes.START_REQUEST, payload: "Loading" });
+			const data = await CategoriesEdit(id, category);
+			const res: ICategory = data;
+			dispatch({
+				type: CategoryActionTypes.EDIT_CATEGORY_SUCCESS,
+				message: "Category edited",
+				category: res
+			});
+			toast.success("Category edited");
 		}
 		catch (e) {
 			dispatch({

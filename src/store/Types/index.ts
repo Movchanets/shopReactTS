@@ -8,13 +8,20 @@ export enum CategoryActionTypes {
 
 	DELETE_CATEGORIES_SUCCESS = "DELETE_CATEGORIES_SUCCESS",
 	GET_CATEGORIES_SUCCESS = "GET_CATEGORIES_SUCCESS",
+	GET_CATEGORY_SUCCESS = "GET_CATEGORY_SUCCESS",
 	CREATE_CATEGORY_SUCCESS = "CREATE_CATEGORY_SUCCESS",
+	EDIT_CATEGORY_SUCCESS = "EDIT_CATEGORY_SUCCESS",
 }
 interface CreateCategoryActionSuccess {
 	type: CategoryActionTypes.CREATE_CATEGORY_SUCCESS,
 	message: any,
 	category: ICategory
 
+}
+interface EditCategoryActionSuccess {
+	type: CategoryActionTypes.EDIT_CATEGORY_SUCCESS,
+	message: any,
+	category: ICategory
 }
 interface DeleteCategoryActionSuccess {
 	type: CategoryActionTypes.DELETE_CATEGORIES_SUCCESS,
@@ -26,9 +33,18 @@ interface GetCategoriesActionSuccess {
 	message: any,
 	categories: Array<ICategory>
 }
+interface GetCategoryActionSuccess {
+	type: CategoryActionTypes.GET_CATEGORY_SUCCESS,
+	message: any,
+	category: ICategory
+}
 export type CategoryActions = GetCategoriesActionSuccess
 	| CreateCategoryActionSuccess
+	| EditCategoryActionSuccess
+	| GetCategoryActionSuccess
+	| StartRequest
 	| DeleteCategoryActionSuccess;
+
 
 interface Error_MSG {
 	type: CommonActionTypes.ERROR_MSG,
@@ -50,7 +66,7 @@ export interface ICategory {
 }
 export interface ICategoryDTO {
 	name: string
-	base64: string
+	base64: string | null
 	description: string
 }
 export interface ILogin {
@@ -67,6 +83,7 @@ export interface ICategoryState {
 	categories: Array<ICategory>
 	loading: boolean
 	message: string
+	category: ICategory | null
 }
 export type CommonActions = Error_MSG
 	| ServerUserErrorAction

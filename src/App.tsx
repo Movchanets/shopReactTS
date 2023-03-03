@@ -6,9 +6,12 @@ import { Route, Routes } from 'react-router-dom';
 import Shop from './components/Shop';
 import DefaultLayout from './components/Containers/default';
 import Login from './components/Login';
-import CreateCategory from './components/Category';
+import CreateCategory from './components/Category/CategoryCreate';
 import Register from './components/Register';
 import NotFound from './components/NotFound';
+
+import { Dashboard } from './components/Category/Dashboard';
+import EditCategory from './components/Category/CategoryEdit';
 
 
 
@@ -20,7 +23,9 @@ function App() {
         <Route index element={<Shop />} />
         <Route path='Login' element={<Login />} />
         <Route path='Register' element={<Register />} />
-        <Route path='Category' element={<CreateCategory />} />
+        <Route path='Categories' element={<Dashboard />} />
+        <Route path='CategoryCreate' element={<CreateCategory />} />
+        <Route path='CategoryEdit/:id' element={<EditCategory />} />
 
       </Route>
       <Route path="*" element={<NotFound />} />

@@ -71,7 +71,7 @@ const Shop: React.FC = () => {
 
 									name: callout.name,
 									description: callout.description,
-									imageSrc: ImageBase + callout.urlImage,
+									imageSrc: ImageBase + '600_' + callout.urlImage,
 									imageAlt: callout.name,
 									href: '#'
 								})))}
