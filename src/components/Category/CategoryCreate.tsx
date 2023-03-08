@@ -20,35 +20,25 @@ export default function CreateCategory() {
 	const { loading } = useTypedSelector((store) => store.categoryReducer);
 
 	const navigate = useNavigate();
-	const [base64, setBase64] = useState('');
+	const [file, setFile] = useState<File | null>(null);
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		const data = new FormData(event.currentTarget);
-		const res: ICategoryDTO = { name: data.get('name') as string, base64: base64, description: data.get('description') as string };
+		const res: ICategoryDTO = { name: data.get('name') as string, file: file, description: data.get('description') as string };
 		console.log(res);
 		CreateCategories(res);
 		navigate('/');
 	};
 	const handleFileRead = async (event: any) => {
 		const file = event.target.files[0]
-		const base64: any = await getBase64(file)
-		setBase64(base64);
+
+		setFile(file);
 
 
 	}
-	function getBase64(file: any) {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = () => {
-				let encoded: any = reader.result?.toString();
 
-				resolve(encoded);
-			};
-			reader.onerror = error => reject(error);
-		});
-	}
+
 	return (
 
 		<div className='pt-5'>
@@ -134,17 +124,17 @@ export default function CreateCategory() {
 											size="small"
 
 										/>
-										{base64 == '' ? (
+										{file == null ? (
 											<div style={{ color: "red" }}>{"Picture required"}</div>
 										) : null}
-										<img width={300} src={base64} />
+										<img width={300} src={file == null ? "" : URL.createObjectURL(file)} />
 										<p className="mt-2 text-sm text-gray-500">
 											Your new Category image.
 										</p>
 									</div>
 									<div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
 										<button
-											disabled={!(isValid && dirty && base64 != '')}
+											disabled={!(isValid && dirty && file != null)}
 											type="submit"
 											className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 

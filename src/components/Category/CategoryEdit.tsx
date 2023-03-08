@@ -1,6 +1,6 @@
 import { Field, Formik } from 'formik';
 import { CategorySchema } from '../Schemas';
-import { ICategoryDTO, ImageBase } from '../../store/Types';
+import { ICategoryDTO } from '../../store/Types';
 import { useEffect, useState } from 'react';
 import { Input, TextField } from '@mui/material';
 import { useActions } from '../../store/Action-Creators/useActions';
@@ -9,6 +9,7 @@ import Loader from '../Loader';
 import { useNavigate, useParams } from 'react-router';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { APP_ENV } from '../../env';
 
 export default function EditCategory() {
 	const params = useParams();
@@ -23,42 +24,30 @@ export default function EditCategory() {
 		GetCategory(id);
 		initialValues.name = category?.name ?? '';
 		initialValues.description = category?.description ?? '';
-		setBase64(ImageBase + '300_' + category?.urlImage ?? '');
+		setFile(null);
 	}, [])
 
 	const { GetCategory, EditCategories } = useActions();
 
 
 	const navigate = useNavigate();
-	const [base64, setBase64] = useState('');
+	const [file, setFile] = useState<File | null>(null);
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		const data = new FormData(event.currentTarget);
-		const res: ICategoryDTO = { name: data.get('name') as string, base64: base64 == ImageBase + '300_' + category?.urlImage ? null : base64, description: data.get('description') as string };
+		const res: ICategoryDTO = { name: data.get('name') as string, file: file != null ? file : null, description: data.get('description') as string };
 		console.log(res);
 		await EditCategories(id, res);
 		navigate('/');
 	};
 	const handleFileRead = async (event: any) => {
 		const file = event.target.files[0]
-		const base64: any = await getBase64(file)
-		setBase64(base64);
+		setFile(file);
 
 
 	}
-	function getBase64(file: any) {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = () => {
-				let encoded: any = reader.result?.toString();
 
-				resolve(encoded);
-			};
-			reader.onerror = error => reject(error);
-		});
-	}
 	return (
 
 		<div className='pt-5'>
@@ -145,7 +134,7 @@ export default function EditCategory() {
 
 										/>
 
-										<img width={300} src={base64} />
+										<img width={300} src={file != null ? URL.createObjectURL(file) : `${APP_ENV.REMOTE_HOST_NAME}files/` + '300_' + category?.urlImage} />
 										<p className="mt-2 text-sm text-gray-500">
 											Edit your Category image.
 										</p>

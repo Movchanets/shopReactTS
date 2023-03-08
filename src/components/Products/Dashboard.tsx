@@ -2,17 +2,18 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { useActions } from '../../store/Action-Creators/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { useEffect } from 'react';
-import { ICategory } from '../../store/Types';
+import { IProduct } from '../../store/Types';
 import { Link } from 'react-router-dom';
 import { TransitionProps } from '@mui/material/transitions';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 import { APP_ENV } from '../../env';
 
-export const Dashboard = () => {
+export const ProductDashboard = () => {
 
-	const { DeleteCategory, Categories } = useActions();
-	const { loading, categories } = useTypedSelector((store) => store.categoryReducer);
+	const { Categories, Products } = useActions();
+
+	const { products } = useTypedSelector((store) => store.productReducer);
 
 	const Transition = React.forwardRef(function Transition(
 		props: TransitionProps & {
@@ -22,7 +23,7 @@ export const Dashboard = () => {
 	) {
 		return <Slide direction="up" ref={ref} {...props} />;
 	});
-	const AlertDialogSlide: React.FC<any> = ({ id }) => {
+	const AlertDialogSlide: React.FC<any> = () => {
 		const [open, setOpen] = React.useState(false);
 
 
@@ -39,8 +40,8 @@ export const Dashboard = () => {
 
 		async function DoAction() {
 
-			await DeleteCategory(id)
-			await Categories();
+			//await DeleteCategory(id)
+			await Products();
 			handleClose();
 		}
 
@@ -75,11 +76,37 @@ export const Dashboard = () => {
 	const columns: GridColDef[] = [
 		{ field: "id", headerName: "Id", width: 50 },
 		{ field: "name", headerName: "Name", width: 100 },
-		{ field: "description", headerName: "Description", width: 200 },
+		{ field: "description", headerName: "Description", width: 150 },
+		{ field: "price", headerName: "Price", width: 50 },
+		{ field: "category", headerName: "Category", width: 100 },
 		{
-			field: "urlImage", headerName: "image",
+			field: "files", headerName: "image", width: 400,
 			renderCell: (params) => {
-				return <img src={`${APP_ENV.REMOTE_HOST_NAME}files/` + "150_" + (params.value)} alt="image" />;
+				const images = params.row.files;
+				return (
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "row",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						{images.map((image: string) => (
+							<img
+
+								src={`${APP_ENV.REMOTE_HOST_NAME}files/150_${image}`}
+								alt="product"
+								style={{
+									width: "100px",
+									height: "100px",
+									margin: "5px",
+									borderRadius: "5px",
+								}}
+							/>
+						))}
+
+					</div>);
 			}
 		},
 		{
@@ -105,8 +132,9 @@ export const Dashboard = () => {
 	];
 	useEffect(() => {
 		Categories();
+		Products();
 	}, []);
-	let rows: ICategory[] = categories;
+	let rows: IProduct[] = products;
 	return (
 		<>
 			<div style={{ height: "50vh", width: "100%" }}>
@@ -121,7 +149,7 @@ export const Dashboard = () => {
 				<Button><Link to={`/CategoryCreate`}
 					className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 
-				>Create new Category</Link> </Button>
+				>Create new Product</Link> </Button>
 				<Button><Link to={`/`}
 					className="inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 

@@ -23,12 +23,12 @@ const requests = {
 };
 
 const Categories = {
-	createCategory: (category: ICategoryDTO) => requests.post(`/create`, category),
+	createCategory: (category: ICategoryDTO) => instance.post(`/create`, category, { headers: { 'Content-Type': 'multipart/form-data' } }),
 	getCategories: () => requests.get(`/get`),
 	getCategory: (id: number) => requests.get(`/get/${id}`),
 	deleteCategory: (id: number) => requests.del(`/delete/${id}`),
 	editCategory: (id: number, category: ICategoryDTO) => requests.put(`/edit/${id}`,
-		{ name: category.name, description: category.description, base64: category.base64, }),
+		{ name: category.name, description: category.description, file: category.file, }),
 }
 export async function CategoryGet(id: number) {
 

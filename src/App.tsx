@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
 
@@ -12,6 +12,8 @@ import NotFound from './components/NotFound';
 
 import { Dashboard } from './components/Category/Dashboard';
 import EditCategory from './components/Category/CategoryEdit';
+import CreateProduct from './components/Products/ProductCreate';
+import { ProductDashboard } from './components/Products/Dashboard';
 
 
 
@@ -23,9 +25,11 @@ function App() {
         <Route index element={<Shop />} />
         <Route path='Login' element={<Login />} />
         <Route path='Register' element={<Register />} />
-        <Route path='Categories' element={<Dashboard />} />
-        <Route path='CategoryCreate' element={<CreateCategory />} />
-        <Route path='CategoryEdit/:id' element={<EditCategory />} />
+        <Route path='Category' element={<Dashboard />} />
+        <Route path='Product' element={<ProductDashboard />} />
+        <Route path='Category/Create' element={<CreateCategory />} />
+        <Route path='Product/Create' element={<CreateProduct />} />
+        <Route path='Category/Edit/:id' element={<EditCategory />} />
 
       </Route>
       <Route path="*" element={<NotFound />} />
