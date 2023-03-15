@@ -1,11 +1,11 @@
 export enum CommonActionTypes {
-	START_REQUEST = "START_REQUEST",
+
 	ERROR_MSG = "ERROR_MSG",
 	SERVER_USER_ERROR = "SERVER_USER_ERROR",
 
 }
 export enum CategoryActionTypes {
-
+	CATEGORY_START_REQUEST = "CATEGORY_START_REQUEST",
 	DELETE_CATEGORIES_SUCCESS = "DELETE_CATEGORIES_SUCCESS",
 	GET_CATEGORIES_SUCCESS = "GET_CATEGORIES_SUCCESS",
 	GET_CATEGORY_SUCCESS = "GET_CATEGORY_SUCCESS",
@@ -13,17 +13,33 @@ export enum CategoryActionTypes {
 	EDIT_CATEGORY_SUCCESS = "EDIT_CATEGORY_SUCCESS",
 }
 export enum ProductActionTypes {
-
+	PRODUCT_START_REQUEST = "PRODUCT_START_REQUEST",
 	DELETE_PRODUCT_SUCCESS = "DELETE_PRODUCT_SUCCESS",
 	GET_PRODUCT_SUCCESS = "GET_PRODUCT_SUCCESS",
 	GET_PRODUCTS_SUCCESS = "GET_PRODUCTS_SUCCESS",
 	CREATE_PRODUCT_SUCCESS = "CREATE_PRODUCT_SUCCESS",
+
 	EDIT_PRODUCT_SUCCESS = "EDIT_PRODUCT_SUCCESS",
 }
 interface CreateProductActionSuccess {
 	type: ProductActionTypes.CREATE_PRODUCT_SUCCESS,
 	message: any,
 	product: IProduct
+}
+interface EditProductActionSuccess {
+	type: ProductActionTypes.EDIT_PRODUCT_SUCCESS,
+	message: any,
+	product: IProduct
+}
+interface GetProductActionSuccess {
+	type: ProductActionTypes.GET_PRODUCT_SUCCESS,
+	message: any,
+	product: IProduct
+
+}
+interface DeleteProductActionSuccess {
+	type: ProductActionTypes.DELETE_PRODUCT_SUCCESS,
+	message: any,
 
 }
 interface CreateCategoryActionSuccess {
@@ -66,20 +82,26 @@ export type CategoryActions = GetCategoriesActionSuccess
 	| CreateCategoryActionSuccess
 	| EditCategoryActionSuccess
 	| GetCategoryActionSuccess
-	| StartRequest
+	| CategoryStartRequest
 	| DeleteCategoryActionSuccess;
 
 export type ProductActions = CreateProductActionSuccess
 	| GetProductsActionSuccess
 	| GetProductActionSuccess
-	| StartRequest;
+	| DeleteProductActionSuccess
+	| EditProductActionSuccess
+	| ProductStartRequest;
 
 interface Error_MSG {
 	type: CommonActionTypes.ERROR_MSG,
 	payload: any
 }
-interface StartRequest {
-	type: CommonActionTypes.START_REQUEST,
+interface CategoryStartRequest {
+	type: CategoryActionTypes.CATEGORY_START_REQUEST,
+	payload: any
+}
+interface ProductStartRequest {
+	type: ProductActionTypes.PRODUCT_START_REQUEST,
 	payload: any
 }
 interface ServerUserErrorAction {
@@ -98,8 +120,10 @@ export interface IProduct {
 	description: string
 	price: number
 	category: string
+	category_id: number
 	files: Array<string>
 }
+
 export interface ICategoryDTO {
 	name: string
 	file: File | null
@@ -112,6 +136,15 @@ export interface ICreateProduct {
 	categoryId: number
 	files: Array<File> | null
 
+
+}
+export interface IEditProduct {
+	name: string
+	description: string
+	price: number
+	category_id: number
+	files: Array<File> | null
+	removeFiles: Array<string> | null
 }
 export interface ILogin {
 	email: string,
@@ -138,5 +171,5 @@ export interface IProductState {
 }
 export type CommonActions = Error_MSG
 	| ServerUserErrorAction
-	| StartRequest
+
 export const ImageBase = "http://localhost:8080/files/";

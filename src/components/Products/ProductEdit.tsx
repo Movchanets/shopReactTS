@@ -1,74 +1,90 @@
 import { Field, Formik } from 'formik';
 import { ProductSchema } from '../Schemas';
-import { ICategory, ICategoryDTO, ICreateProduct } from '../../store/Types';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ICategory, ICategoryDTO, ICreateProduct, IEditProduct, IProduct } from '../../store/Types';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Button, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { useActions } from '../../store/Action-Creators/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import Loader from '../Loader';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Editor } from '@tinymce/tinymce-react';
+import { APP_ENV } from '../../env';
+import { FaTrash } from 'react-icons/fa'
 
-
-export default function CreateProduct() {
+export default function EditProduct() {
+	const params = useParams();
+	const id: number = Number.parseInt(params.id as string);
 	const initialValues = {
 		name: '',
-		description: 'valid description',
-		price: 0
-
+		description: '',
+		price: 0,
+		removeFiles: Array<string>(),
 
 	};
-	const { CreateProduct, Categories, } = useActions();
-	const { loading } = useTypedSelector((store) => store.productReducer);
+	const { EditProduct, Categories, GetProduct } = useActions();
+	const { loading, product } = useTypedSelector((store) => store.productReducer);
 	const { categories } = useTypedSelector((store) => store.categoryReducer);
-
+	const [oldImages, setOldImages] = useState<string[]>([]);
 	const navigate = useNavigate();
 
-
-
+	const [category, setCategory] = useState<any>(null);
+	useEffect(() => {
+		console.log(category)
+	}, [category])
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		const data = new FormData(event.currentTarget);
-		if (category == null) return;
-		const res: ICreateProduct = {
+
+		const res: IEditProduct = {
 			name: data.get('name') as string,
 			files: model,
-			description: editorRef.current?.getContent() ?? '',
+			description: data.get('description') as string,
 			price: Number(data.get('price')),
-			categoryId: category.category_id
+			category_id: category?.id ?? product?.category_id,
+			removeFiles: fileToRemove
 		};
 		console.log(res);
-		// await CreateProduct(res);
-		// navigate('/');
+
+		await EditProduct(id, res);
+		navigate('/');
 	};
 
 
 
 	useEffect(() => {
-		Categories()
+		(async () => {
+
+			await GetProduct(id);
+
+			await Categories();
+
+
+
+		})();
+
+
+
 
 	}, [])
-	const contentCategories = categories.map((category) => (
-		<option key={category.id} value={category.id}>{category.name}</option>
-	));
-
-	const [category, setCategory] = useState<any>(null);
 	useEffect(() => {
-		console.log(category?.category_id)
-	}, [category])
-	const onChangeHandler = (
-		e:
-			| ChangeEvent<HTMLInputElement>
-			| ChangeEvent<HTMLTextAreaElement>
-			| ChangeEvent<HTMLSelectElement>
-	) => {
-		//console.log(e.target.name, e.target.value);
-		setCategory({ [e.target.name]: e.target.value });
-	};
+
+
+
+		initialValues.name = product?.name ?? '';
+		initialValues.description = product?.description ?? '';
+		initialValues.price = product?.price ?? 0;
+		setOldImages(product?.files ?? []);
+
+		console.log(product)
+		console.log(initialValues)
+
+	}, [product])
+
+	const [fileToRemove, setFileToRemove] = useState<string[]>([]);
+
 	const [model, setModel] = useState<File[]>([]);
 
 
@@ -82,26 +98,44 @@ export default function CreateProduct() {
 		}
 		target.value = "";
 	}
-	const dataFileView: any = model.map((file, index) =>
-		<div key={index + '_item'} >
-			<img key={index} src={URL.createObjectURL(file)} />
-			<Button onClick={() => {
-				console.log(model)
-				console.log(index)
-				if (index > -1) { // only splice array when item is found
-					model.splice(index, 1);
-					let m = [...model];
-					setModel(m); // 2nd parameter means remove one item only
-				}
-			}} >Delete</Button>
+
+
+	const contentCategories = categories.map((category) => (
+		<option key={category.id} value={category.id}>{category.name}</option>
+	));
+	const onChangeHandler = (
+		e:
+			| ChangeEvent<HTMLInputElement>
+			| ChangeEvent<HTMLTextAreaElement>
+			| ChangeEvent<HTMLSelectElement>
+	) => {
+		//console.log(e.target.name, e.target.value);
+		setCategory({ [e.target.name]: e.target.value });
+	};
+	const DeleteProductOldImagesHandler = (imageSrc: string) => {
+		setFileToRemove([...fileToRemove, imageSrc]);
+		setOldImages(oldImages.filter(x => x !== imageSrc));
+	};
+
+	const DataProductsOld = oldImages.map((product, index) => (
+		<div key={index} className="inline  m-2 ">
+			<div
+				style={{ cursor: "pointer" }}
+				className="flex justify-center ... border-2 border-black  rounded-lg ... "
+				onClick={(e) => {
+					DeleteProductOldImagesHandler(product);
+				}}
+			>
+				<FaTrash className="m-2 " />
+			</div>
+			<div className="p-2">
+				<img
+					className=" w-20 h-20 "
+					src={`${APP_ENV.REMOTE_HOST_NAME}files/600_${product}`}
+				></img>
+			</div>
 		</div>
-	);
-	useEffect(() => {
-		console.log(category)
-
-	}, [category])
-	const editorRef = useRef<any>(null);
-
+	));
 	return (
 
 		<div className='pt-5'>
@@ -109,14 +143,11 @@ export default function CreateProduct() {
 
 
 			<div >
-
-
-				<div />
 				<div className="md:col-span-1 m-5">
 					<div className="px-4 sm:px-0">
-						<h3 className="text-lg font-medium leading-6 text-gray-900">Product</h3>
+						<h3 className="text-lg font-medium leading-6 text-gray-900">Category</h3>
 						<p className="mt-1 text-sm text-gray-600">
-							Add new Product here
+							Edit Product here
 						</p>
 					</div>
 				</div>
@@ -126,7 +157,6 @@ export default function CreateProduct() {
 						onSubmit={() => {
 
 						}}
-						onInit
 						validationSchema={ProductSchema}
 					>
 						{({ errors, touched, isSubmitting, isValid, dirty }) => (
@@ -159,32 +189,23 @@ export default function CreateProduct() {
 												Your new Product name.
 											</p>
 
-											<Editor
-												tinymceScriptSrc="/tinymce.min.js"
-												onInit={(evt, editor) => editorRef.current = editor}
-												initialValue="<p>Standart Descriprion</p>"
-												onChange={(evt) => { console.log(evt.target.value) }}
-												init={{
-													height: 400,
-													menubar: false,
-													valid_elements: '*[*]',
-													
-													valid_children: "+body[dl]",
-													forced_root_block: "false",
+											<div className="mt-1">
+												<Field
+													as={TextField}
+													margin="normal"
+													required
 
-													plugins: [
-														'advlist autolink lists link image charmap print preview anchor',
-														'searchreplace visualblocks code fullscreen',
-														'insertdatetime media table paste code help wordcount'
-													],
-													toolbar: 'undo redo | formatselect | ' +
-														'bold italic backcolor | alignleft aligncenter ' +
-														'alignright alignjustify | bullist numlist outdent indent | ' +
-														'removeformat | help',
-													content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-												}}
-											/>
+													fullWidth
+													id="description"
 
+													name="description"
+
+													autoFocus
+												/>
+												{errors.description && touched.description ? (
+													<div style={{ color: "red" }}>{errors.description}</div>
+												) : null}
+											</div>
 											<p className="mt-2 text-sm text-gray-500">
 												Your new Product description.
 											</p>
@@ -216,15 +237,34 @@ export default function CreateProduct() {
 													Оберіть категорію
 												</label>
 												<select
+													value={product?.category_id}
 													onChange={onChangeHandler}
 													id="category_id"
 													name="category_id"
 													className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 												>
-													<option hidden selected>Виберіть категорію</option>
+
 													{contentCategories}
 												</select>
 											</div>
+											<div className="mt-1 flex items-center">
+												<label className="flex ">
+													<>{DataProductsOld}</>
+												</label>
+											</div>
+											{/* <div className="mt-1">
+												<InputLabel id="select-label">Category</InputLabel>
+												<Select labelId="select-label" value={SelectValue} onChange={(e) => {
+													setCategory(categories.find(i => i.id.toString() == (e.target.value)));
+													setSelectValue(e.target.value)
+												}}>
+
+													{categories?.map((c) => {
+
+														return <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>
+													})}
+												</Select>
+											</div> */}
 										</div>
 										<div>
 											<label className="block text-sm font-medium text-gray-700">
@@ -236,7 +276,23 @@ export default function CreateProduct() {
 													htmlFor="selectImage"
 													className="inline-block w-20 overflow-hidden bg-gray-100"
 												>
-													{dataFileView}
+
+													{model.map((file, index) =>
+														<div key={index + '_item'} >
+															<img key={index} src={URL.createObjectURL(file)} />
+															<Button onClick={() => {
+																console.log(model)
+																console.log(index)
+																if (index > -1) { // only splice array when item is found
+																	model.splice(index, 1);
+																	let m = [...model];
+																	setModel(m); // 2nd parameter means remove one item only
+																}
+															}} >Delete</Button>
+														</div>
+													)
+													}
+
 												</label>
 												<label
 													htmlFor="selectImage"
@@ -258,58 +314,7 @@ export default function CreateProduct() {
 											/>
 										</div>
 									</div>
-									{/* <div>
 
-											{itemList.length > 0 ?
-
-												<DragDropContext onDragEnd={handleDrop}>
-
-													<Droppable droppableId="list-container">
-														{(provided) => (
-															<div
-																className="list-container"
-																{...provided.droppableProps}
-																ref={provided.innerRef}
-															>
-
-																{itemList.map((item, index) => (
-																	<Draggable key={item} draggableId={item} index={index}>
-
-																		{(provided) => (
-																			<div
-																				className="item-container"
-																				ref={provided.innerRef}
-
-																			>
-																				<div>
-																					<label htmlFor='first' >
-																						<img src={"https://placehold.jp/3d4070/ffffff/200x200.png"} className="rounded h-20 w-20" />
-																					</label>
-																					<input type="file" hidden id='first' onChange={handleFileRead} onClick={() => console.log("file+")} />
-
-																				</div>
-																			</div>
-																		)}
-																	</Draggable>
-																))}
-																{provided.placeholder}
-															</div>
-														)}
-													</Droppable>
-												</DragDropContext>
-												:
-												<div>
-
-													<input type="file" id='first' multiple onChange={(e) => {
-														const a: File[] = Array.from(e.target.files || []);
-														console.log(a);
-														setItemList(a.map((i) => i.name));
-														setFiles(a);
-													}} onClick={() => console.log(itemList)} />
-
-												</div>
-											}
-										</div> */}
 
 
 									<div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
@@ -321,7 +326,7 @@ export default function CreateProduct() {
 										>
 											{isSubmitting ? "Loading..." : "Save"}
 										</button>
-										<button><Link to={`/Categories`}
+										<button><Link to={`/products/`}
 											className="m-2 inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 
 										>Return to dashboard</Link> </button>

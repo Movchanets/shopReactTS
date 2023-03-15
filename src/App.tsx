@@ -14,6 +14,9 @@ import { Dashboard } from './components/Category/Dashboard';
 import EditCategory from './components/Category/CategoryEdit';
 import CreateProduct from './components/Products/ProductCreate';
 import { ProductDashboard } from './components/Products/Dashboard';
+import EditProduct from './components/Products/ProductEdit';
+import ProductListPage from './components/Shop/Products/ProductListPage';
+import Product from './components/Shop/Products';
 
 
 
@@ -27,8 +30,11 @@ function App() {
         <Route path='Register' element={<Register />} />
         <Route path='Category' element={<Dashboard />} />
         <Route path='Product' element={<ProductDashboard />} />
+        <Route path='Product/list' element={<ProductListPage />} />
         <Route path='Category/Create' element={<CreateCategory />} />
         <Route path='Product/Create' element={<CreateProduct />} />
+        <Route path='Product/Edit/:id' element={<EditProduct />} />
+        <Route path='Product/:id' element={<Product />} />
         <Route path='Category/Edit/:id' element={<EditCategory />} />
 
       </Route>

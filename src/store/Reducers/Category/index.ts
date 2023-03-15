@@ -34,7 +34,7 @@ export const categoryReducer = (state = initialState, action: any): ICategorySta
 			return {
 				...state, loading: false, message: action.message
 			};
-		case CommonActionTypes.START_REQUEST:
+		case CategoryActionTypes.CATEGORY_START_REQUEST:
 			return {
 				...state, loading: true
 			};

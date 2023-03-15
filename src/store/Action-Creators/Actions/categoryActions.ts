@@ -9,7 +9,7 @@ export const Categories = () => {
 	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
 		try {
 			console.log("Here Categories")
-			dispatch({ type: CommonActionTypes.START_REQUEST, payload: "Loading" });
+			dispatch({ type: CategoryActionTypes.CATEGORY_START_REQUEST, payload: "Loading" });
 			const data = await CategoriesGet();
 			const { response } = data;
 			console.log(response)
@@ -37,11 +37,11 @@ export const GetCategory = (id: number) => {
 	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
 		try {
 
-			dispatch({ type: CommonActionTypes.START_REQUEST, payload: "Loading" });
+			dispatch({ type: CategoryActionTypes.CATEGORY_START_REQUEST, payload: "Loading" });
 			const data = await CategoryGet(id);
 			const { response } = data;
 			const res: ICategory = response;
-			console.log(response)
+
 			dispatch({
 				type: CategoryActionTypes.GET_CATEGORY_SUCCESS,
 				message: "Category loaded",
@@ -60,7 +60,7 @@ export const GetCategory = (id: number) => {
 export const CreateCategories = (category: ICategoryDTO) => {
 	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
 		try {
-			dispatch({ type: CommonActionTypes.START_REQUEST, payload: "Loading" });
+			dispatch({ type: CategoryActionTypes.CATEGORY_START_REQUEST, payload: "Loading" });
 			const data = await CategoriesCreate(category);
 
 			const res: ICategory = data;
@@ -83,7 +83,7 @@ export const CreateCategories = (category: ICategoryDTO) => {
 export const EditCategories = (id: number, category: ICategoryDTO) => {
 	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
 		try {
-			dispatch({ type: CommonActionTypes.START_REQUEST, payload: "Loading" });
+			dispatch({ type: CategoryActionTypes.CATEGORY_START_REQUEST, payload: "Loading" });
 			const data = await CategoriesEdit(id, category);
 			const res: ICategory = data;
 			dispatch({
@@ -104,8 +104,9 @@ export const EditCategories = (id: number, category: ICategoryDTO) => {
 export const DeleteCategory = (id: number) => {
 	return async (dispatch: Dispatch<CommonActions | CategoryActions>) => {
 		try {
-			dispatch({ type: CommonActionTypes.START_REQUEST, payload: "Loading" });
+			dispatch({ type: CategoryActionTypes.CATEGORY_START_REQUEST, payload: "Loading" });
 			const data = await CategoriesDelete(id);
+
 			dispatch({
 				type: CategoryActionTypes.DELETE_CATEGORIES_SUCCESS,
 				message: "Category deleted",

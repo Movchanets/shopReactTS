@@ -1,5 +1,5 @@
 
-import { ICreateProduct } from './../store/Types/index';
+import { ICreateProduct, IEditProduct } from './../store/Types/index';
 
 import axios from "axios";
 
@@ -25,7 +25,9 @@ const requests = {
 const Product = {
 	createProduct: (product: ICreateProduct) => instance.post(`/create`, product, { headers: { 'Content-Type': 'multipart/form-data' } }),
 	getProduct: (id: number) => requests.get(`/get/${id}`),
+	editProduct: (id: number, product: IEditProduct) => instance.put(`/update/${id}`, product, { headers: { 'Content-Type': 'multipart/form-data' } }),
 	getAllProducts: () => requests.get(`/get`),
+	delProduct: (id: number) => requests.del(`/delete/${id}`),
 }
 
 export async function ProductCreate(product: ICreateProduct) {
@@ -42,8 +44,45 @@ export async function ProductCreate(product: ICreateProduct) {
 	return data;
 
 }
+export async function ProductEdit(id: number, product: IEditProduct) {
+	const data = await Product.editProduct(id, product)
+		.then((response) => {
+			return {
+				response,
+			};
+		})
+		.catch((error) => {
+			return error.response;
+		});
+	return data;
+}
+
 export async function GetAllProducts() {
 	const data = await Product.getAllProducts()
+		.then((response) => {
+			return {
+				response,
+			};
+		})
+		.catch((error) => {
+			return error.response;
+		});
+	return data;
+}
+export async function DeleteProduct(id: number) {
+	const data = await Product.delProduct(id)
+		.then((response) => {
+			return {
+				response,
+			};
+		})
+		.catch((error) => {
+			return error.response;
+		});
+	return data;
+}
+export async function ProductGet(id: number) {
+	const data = await Product.getProduct(id)
 		.then((response) => {
 			return {
 				response,

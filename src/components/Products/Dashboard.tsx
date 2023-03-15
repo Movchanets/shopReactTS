@@ -11,7 +11,7 @@ import { APP_ENV } from '../../env';
 
 export const ProductDashboard = () => {
 
-	const { Categories, Products } = useActions();
+	const { Categories, Products, ProductDelete } = useActions();
 
 	const { products } = useTypedSelector((store) => store.productReducer);
 
@@ -23,7 +23,7 @@ export const ProductDashboard = () => {
 	) {
 		return <Slide direction="up" ref={ref} {...props} />;
 	});
-	const AlertDialogSlide: React.FC<any> = () => {
+	const AlertDialogSlide: React.FC<any> = ({ id }) => {
 		const [open, setOpen] = React.useState(false);
 
 
@@ -40,7 +40,7 @@ export const ProductDashboard = () => {
 
 		async function DoAction() {
 
-			//await DeleteCategory(id)
+			await ProductDelete(id)
 			await Products();
 			handleClose();
 		}
@@ -80,7 +80,7 @@ export const ProductDashboard = () => {
 		{ field: "price", headerName: "Price", width: 50 },
 		{ field: "category", headerName: "Category", width: 100 },
 		{
-			field: "files", headerName: "image", width: 400,
+			field: "files", headerName: "image", width: 300,
 			renderCell: (params) => {
 				const images = params.row.files;
 				return (
@@ -93,7 +93,7 @@ export const ProductDashboard = () => {
 						}}
 					>
 						{images.map((image: string) => (
-							<img
+							<img key={image}
 
 								src={`${APP_ENV.REMOTE_HOST_NAME}files/150_${image}`}
 								alt="product"
@@ -125,7 +125,7 @@ export const ProductDashboard = () => {
 
 			renderCell: (params) => {
 
-				return (<Button><Link to={`/CategoryEdit/` + params.row.id} >Edit</Link> </Button>);
+				return (<Button><Link to={`/Product/Edit/` + params.row.id} >Edit</Link> </Button>);
 
 			}
 		}
@@ -146,7 +146,7 @@ export const ProductDashboard = () => {
 				/>
 			</div>
 			<div>
-				<Button><Link to={`/CategoryCreate`}
+				<Button><Link to={`/Product/Create`}
 					className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 
 				>Create new Product</Link> </Button>
