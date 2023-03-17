@@ -5,10 +5,11 @@ import { APP_ENV } from "../../../env";
 import { IProduct } from '../../../store/Types';
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { useActions } from '../../../store/Action-Creators/useActions';
+import Loader from '../../Loader';
 
 
 const ProductListPage = () => {
-	const { products } = useTypedSelector((store) => store.productReducer);
+	const { products, loading } = useTypedSelector((store) => store.productReducer);
 	const { Products } = useActions();
 	useEffect(() => {
 		async function fetchData() {
@@ -44,6 +45,7 @@ const ProductListPage = () => {
 	));
 	return (
 		<>
+			{loading ? <Loader /> : null}
 			<div className="bg-gray-100">
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">

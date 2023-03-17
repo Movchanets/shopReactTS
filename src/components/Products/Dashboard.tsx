@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Slide } from '@mui/material';
 import { useActions } from '../../store/Action-Creators/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { useEffect } from 'react';
@@ -8,71 +8,26 @@ import { TransitionProps } from '@mui/material/transitions';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 import { APP_ENV } from '../../env';
+import ModalDelete from '../Modal';
+import Loader from '../Loader';
 
 export const ProductDashboard = () => {
 
-	const { Categories, Products, ProductDelete } = useActions();
-
-	const { products } = useTypedSelector((store) => store.productReducer);
-
-	const Transition = React.forwardRef(function Transition(
-		props: TransitionProps & {
-			children: React.ReactElement<any, any>;
-		},
-		ref: React.Ref<unknown>,
-	) {
-		return <Slide direction="up" ref={ref} {...props} />;
-	});
-	const AlertDialogSlide: React.FC<any> = ({ id }) => {
-		const [open, setOpen] = React.useState(false);
-
-
-
-		const handleClickOpen = () => {
-			setOpen(true);
-
-		};
-
-		const handleClose = () => {
-			setOpen(false);
-
-		};
+	const deleteProductHandler = (id: number) => {
 
 		async function DoAction() {
-
 			await ProductDelete(id)
 			await Products();
-			handleClose();
 		}
-
-
-		return (
-			<div>
-				<Button variant="outlined" onClick={handleClickOpen}>
-					Delete
-				</Button>
-				<Dialog
-					open={open}
-					TransitionComponent={Transition}
-					keepMounted
-
-					onClose={handleClose}
-					aria-describedby="alert-dialog-slide-description"
-				>
-					<DialogTitle>{"Delete this category?"}</DialogTitle>
-					<DialogContent>
-						<DialogContentText id="alert-dialog-slide-description">
-							You cannot undo this action
-						</DialogContentText>
-					</DialogContent>
-					<DialogActions>
-						<Button onClick={handleClose}>Disagree</Button>
-						<Button onClick={DoAction}>Agree</Button>
-					</DialogActions>
-				</Dialog>
-			</div>
-		);
+		DoAction();
 	}
+
+	const { Products, ProductDelete } = useActions();
+
+	const { products, loading } = useTypedSelector((store) => store.productReducer);
+
+
+
 	const columns: GridColDef[] = [
 		{ field: "id", headerName: "Id", width: 50 },
 		{ field: "name", headerName: "Name", width: 100 },
@@ -115,7 +70,12 @@ export const ProductDashboard = () => {
 			sortable: false,
 
 			renderCell: (params) => {
-				return <AlertDialogSlide id={params.row.id} />;
+				return <ModalDelete
+					id={params.row.id}
+					title={params.row.name}
+					text={'Ви впевнені, що хочете видалити цей продукт? - ' + params.row.name}
+					deleteFunc={deleteProductHandler}
+				/>
 			}
 		},
 		{
@@ -131,12 +91,16 @@ export const ProductDashboard = () => {
 		}
 	];
 	useEffect(() => {
-		Categories();
-		Products();
+
+		async function DoAction() {
+			await Products();
+		}
+		DoAction();
 	}, []);
 	let rows: IProduct[] = products;
 	return (
 		<>
+			{loading ? <Loader /> : null}
 			<div style={{ height: "50vh", width: "100%" }}>
 				<DataGrid
 					hideFooter={true}

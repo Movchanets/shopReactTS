@@ -30,6 +30,11 @@ export const EditProduct = (id: number, product: IEditProduct) => {
 		try {
 			dispatch({ type: ProductActionTypes.PRODUCT_START_REQUEST, payload: "Loading" });
 			const data = await ProductEdit(id, product);
+			dispatch({
+				type: ProductActionTypes.EDIT_PRODUCT_SUCCESS,
+				message: "Product edited",
+				product: data
+			});
 		}
 		catch (e) {
 			dispatch({

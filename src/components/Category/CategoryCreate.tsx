@@ -21,13 +21,13 @@ export default function CreateCategory() {
 
 	const navigate = useNavigate();
 	const [file, setFile] = useState<File | null>(null);
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		const data = new FormData(event.currentTarget);
 		const res: ICategoryDTO = { name: data.get('name') as string, file: file, description: data.get('description') as string };
 		console.log(res);
-		CreateCategories(res);
+		await CreateCategories(res);
 		navigate('/');
 	};
 	const handleFileRead = async (event: any) => {

@@ -23,7 +23,7 @@ export default function CreateProduct() {
 	const { CreateProduct, Categories, } = useActions();
 	const { loading } = useTypedSelector((store) => store.productReducer);
 	const { categories } = useTypedSelector((store) => store.categoryReducer);
-
+	const categoryLoading = useTypedSelector((store) => store.categoryReducer).loading;
 	const navigate = useNavigate();
 
 
@@ -34,6 +34,7 @@ export default function CreateProduct() {
 
 		const data = new FormData(event.currentTarget);
 		if (category == null) return;
+		console.log(editorRef.current?.getContent() ?? '')
 		const res: ICreateProduct = {
 			name: data.get('name') as string,
 			files: model,
@@ -42,15 +43,17 @@ export default function CreateProduct() {
 			categoryId: category.category_id
 		};
 		console.log(res);
-		// await CreateProduct(res);
-		// navigate('/');
+		await CreateProduct(res);
+		navigate('/');
 	};
 
 
 
 	useEffect(() => {
-		Categories()
-
+		async function fetchCategories() {
+			await Categories()
+		}
+		fetchCategories();
 	}, [])
 	const contentCategories = categories.map((category) => (
 		<option key={category.id} value={category.id}>{category.name}</option>
@@ -97,15 +100,15 @@ export default function CreateProduct() {
 		</div>
 	);
 	useEffect(() => {
-		console.log(category)
-
+		console.log(category);
+		console.log(editorRef?.current?.getContent());
 	}, [category])
 	const editorRef = useRef<any>(null);
 
 	return (
 
 		<div className='pt-5'>
-			{loading ? <Loader /> : null}
+			{loading || categoryLoading ? <Loader /> : null}
 
 
 			<div >
@@ -160,28 +163,25 @@ export default function CreateProduct() {
 											</p>
 
 											<Editor
-												tinymceScriptSrc="/tinymce.min.js"
-												onInit={(evt, editor) => editorRef.current = editor}
-												initialValue="<p>Standart Descriprion</p>"
-												onChange={(evt) => { console.log(evt.target.value) }}
-												init={{
-													height: 400,
-													menubar: false,
-													valid_elements: '*[*]',
-													
-													valid_children: "+body[dl]",
-													forced_root_block: "false",
 
+												initialValue="<p>Standart Descriprion</p>"
+												onInit={(evt, editor) => editorRef.current = editor}
+												apiKey='fhugnp7lkscyajt3l9x8rj6xxxbbuf612l86093z5i4d93c6'
+												init={{
+													height: 500,
+													menubar: false,
 													plugins: [
-														'advlist autolink lists link image charmap print preview anchor',
-														'searchreplace visualblocks code fullscreen',
-														'insertdatetime media table paste code help wordcount'
+														'advlist autolink lists link image',
+														'charmap print preview anchor help',
+														'searchreplace visualblocks code',
+														'insertdatetime media table paste wordcount'
 													],
-													toolbar: 'undo redo | formatselect | ' +
-														'bold italic backcolor | alignleft aligncenter ' +
-														'alignright alignjustify | bullist numlist outdent indent | ' +
-														'removeformat | help',
-													content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+													toolbar:
+														'undo redo | formatselect | bold italic | \
+														alignleft aligncenter alignright | \
+														bullist numlist outdent indent | help',
+													forced_root_block: ""
+
 												}}
 											/>
 

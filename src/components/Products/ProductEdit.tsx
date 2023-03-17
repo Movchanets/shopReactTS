@@ -25,6 +25,7 @@ export default function EditProduct() {
 	const { EditProduct, Categories, GetProduct } = useActions();
 	const { loading, product } = useTypedSelector((store) => store.productReducer);
 	const { categories } = useTypedSelector((store) => store.categoryReducer);
+	const CategoryLoad = useTypedSelector((store) => store.categoryReducer.loading);
 	const [oldImages, setOldImages] = useState<string[]>([]);
 	const navigate = useNavigate();
 
@@ -61,8 +62,15 @@ export default function EditProduct() {
 
 			await Categories();
 
+			async function setData() {
+				if (product === null) return;
+
+				setOldImages(product.files);
 
 
+			}
+
+			await setData();
 		})();
 
 
@@ -72,14 +80,6 @@ export default function EditProduct() {
 	useEffect(() => {
 
 
-
-		initialValues.name = product?.name ?? '';
-		initialValues.description = product?.description ?? '';
-		initialValues.price = product?.price ?? 0;
-		setOldImages(product?.files ?? []);
-
-		console.log(product)
-		console.log(initialValues)
 
 	}, [product])
 
@@ -139,7 +139,7 @@ export default function EditProduct() {
 	return (
 
 		<div className='pt-5'>
-			{loading ? <Loader /> : null}
+			{loading || CategoryLoad ? <Loader /> : null}
 
 
 			<div >
@@ -153,7 +153,14 @@ export default function EditProduct() {
 				</div>
 				<div className="mt-5 md:col-span-2 md:mt-0">
 					<Formik
-						initialValues={initialValues}
+						enableReinitialize={true}
+						initialValues={
+							{
+								name: product?.name ?? '',
+								price: product?.price ?? 0,
+								description: product?.description ?? '',
+							}}
+
 						onSubmit={() => {
 
 						}}

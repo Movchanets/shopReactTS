@@ -6,6 +6,7 @@ import { uuid } from 'uuidv4';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { useActions } from '../../store/Action-Creators/useActions';
 import { ImageBase } from '../../store/Types';
+import Loader from '../Loader';
 
 
 
@@ -42,11 +43,14 @@ const CategoryView = (callout: ICategoryView) => {
 }
 const Shop: React.FC = () => {
 
-	const { categories } = useTypedSelector((store) => store.categoryReducer)
+	const { categories, loading } = useTypedSelector((store) => store.categoryReducer)
 	const { Categories } = useActions();
 
 	useEffect(() => {
-		Categories();
+		async function fetchData() {
+			await Categories();
+		}
+		fetchData();
 	}, []);
 
 
@@ -54,7 +58,7 @@ const Shop: React.FC = () => {
 	return (
 
 		<Container maxWidth="lg" style={{ display: 'block' }}>
-
+			{loading ? <Loader /> : null}
 
 
 

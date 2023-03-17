@@ -8,6 +8,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 import { APP_ENV } from '../../env';
+import Loader from '../Loader';
 
 export const Dashboard = () => {
 
@@ -104,11 +105,16 @@ export const Dashboard = () => {
 		}
 	];
 	useEffect(() => {
-		Categories();
+		async function GetCategories() {
+			await Categories();
+		}
+		GetCategories();
 	}, []);
+
 	let rows: ICategory[] = categories;
 	return (
 		<>
+			{loading ? <Loader /> : null}
 			<div style={{ height: "50vh", width: "100%" }}>
 				<DataGrid
 					hideFooter={true}

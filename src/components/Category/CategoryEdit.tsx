@@ -21,10 +21,15 @@ export default function EditCategory() {
 	};
 	const { loading, category } = useTypedSelector((store) => store.categoryReducer);
 	useEffect(() => {
-		GetCategory(id);
-		initialValues.name = category?.name ?? '';
-		initialValues.description = category?.description ?? '';
-		setFile(null);
+		async function Get(id: number) {
+
+			await GetCategory(id);
+
+			setFile(null);
+
+
+		}
+		Get(id);
 	}, [])
 
 	const { GetCategory, EditCategories } = useActions();
@@ -65,7 +70,13 @@ export default function EditCategory() {
 				</div>
 				<div className="mt-5 md:col-span-2 md:mt-0">
 					<Formik
-						initialValues={initialValues}
+						enableReinitialize={true}
+						initialValues={
+							{
+								name: category?.name ?? "",
+								description: category?.description ?? ''
+							}
+						}
 						onSubmit={() => {
 
 						}}

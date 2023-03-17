@@ -35,6 +35,14 @@ export const productReducer = (state = initialState, action: any): IProductState
 			return {
 				...state, loading: false, product: action.product
 			};
+		case ProductActionTypes.EDIT_PRODUCT_SUCCESS:
+			return {
+				...state, loading: false, product: action.product
+			};
+		case ProductActionTypes.CREATE_PRODUCT_SUCCESS:
+			return {
+				...state, loading: false, product: action.product
+			};
 		default:
 			return state;
 	};

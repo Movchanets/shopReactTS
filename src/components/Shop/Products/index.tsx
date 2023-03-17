@@ -25,10 +25,7 @@ const Product = () => {
 	const Item = (props: any) => {
 		return (
 			<Paper >
-
-
 				<img src={`${APP_ENV.REMOTE_HOST_NAME}files/600_` + props.item} className="absolute block w-full  -translate-x-1/2  -translate-y-1/2 top-1/2 left-1/2" alt="..." />
-
 			</Paper>
 		)
 	}
