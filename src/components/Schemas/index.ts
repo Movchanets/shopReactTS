@@ -12,6 +12,8 @@ export const LoginSchema = Yup.object().shape({
 
 
 export const RegisterSchema = Yup.object().shape({
+	firstName: Yup.string().required("Required").label('First name').min(3, "First name must be at least 3 characters").max(50, "First name must be at most 50 characters"),
+	lastName: Yup.string().required("Required").label('Last name').min(3, "Last name must be at least 3 characters").max(50, "Last name must be at most 50 characters"),
 	email: Yup.string().email("Invalid email address").required("Required").label('Email address'),
 	password: Yup.string()
 		.min(6, "Password must be at least 6 characters")

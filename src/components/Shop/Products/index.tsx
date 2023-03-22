@@ -6,7 +6,8 @@ import { APP_ENV } from '../../../env';
 import Loader from '../../Loader';
 import Carousel from 'react-material-ui-carousel';
 import { Paper } from '@mui/material';
-import { Button } from 'reactstrap';
+
+import DOMPurify from 'dompurify';
 
 const Product = () => {
 	const params = useParams();
@@ -32,8 +33,10 @@ const Product = () => {
 	useEffect(() => {
 		async function fetchData() {
 			await GetProduct(id);
+
 		}
 		fetchData();
+
 	}, []);
 
 	if (product === null) {
@@ -105,7 +108,12 @@ const Product = () => {
 					Купити
 
 				</button>
+				<div className="border-b border-gray-200 py-6">
+					<p className="text-base leading-4 text-gray-800">Description</p>
 
+					{<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description) }} />}
+
+				</div>
 				<div>
 					<div className="border-t border-b py-4 mt-7 border-gray-200">
 						<div onClick={() => setShow(!show)} className="flex justify-between items-center cursor-pointer">

@@ -5,14 +5,15 @@ import Copyright from '../Copyright';
 import { uuid } from 'uuidv4';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { useActions } from '../../store/Action-Creators/useActions';
-import { ImageBase } from '../../store/Types';
+
 import Loader from '../Loader';
+import { APP_ENV } from '../../env';
 
 
 
 
 interface ICategoryView {
-
+	id: number,
 	name: string,
 	description: string,
 	imageSrc: string,
@@ -23,13 +24,15 @@ const CategoryView = (callout: ICategoryView) => {
 
 
 	return (<>
-		<div key={callout.name + '_id'} className="group relative  scroll-smooth">
+		<div key={callout.id + '_id'} className="group relative  scroll-smooth">
 			<div className="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
-				<img
-					src={callout.imageSrc}
-					alt={callout.imageAlt}
-					className="h-full w-full object-cover object-center"
-				/>
+				<div className='picture-main'>
+					<img
+						src={callout.imageSrc}
+						alt={callout.imageAlt}
+						className="picture-container"
+					/>
+				</div>
 			</div>
 			<h3 className="mt-6 text-sm text-gray-500">
 				<a href={callout.href}>
@@ -72,10 +75,10 @@ const Shop: React.FC = () => {
 
 							{categories?.map((callout) => (
 								CategoryView({
-
+									id: callout.id,
 									name: callout.name,
 									description: callout.description,
-									imageSrc: ImageBase + '600_' + callout.urlImage,
+									imageSrc: `${APP_ENV.REMOTE_HOST_NAME}files/` + '600_' + callout.urlImage,
 									imageAlt: callout.name,
 									href: '#'
 								})))}

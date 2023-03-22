@@ -4,6 +4,17 @@ export enum CommonActionTypes {
 	SERVER_USER_ERROR = "SERVER_USER_ERROR",
 
 }
+export enum AccountActionTypes {
+	ACCOUNT_START_REQUEST = "ACCOUNT_START_REQUEST",
+	DELETE_ACCOUNT_SUCCESS = "DELETE_ACCOUNT_SUCCESS",
+	GET_ACCOUNT_SUCCESS = "GET_ACCOUNT_SUCCESS",
+	GET_ACCOUNTS_SUCCESS = "GET_ACCOUNTS_SUCCESS",
+	CREATE_ACCOUNT_SUCCESS = "CREATE_ACCOUNT_SUCCESS",
+	EDIT_ACCOUNT_SUCCESS = "EDIT_ACCOUNT_SUCCESS",
+	LOGIN_SUCCESS = "LOGIN_SUCCESS",
+	LOGOUT_SUCCESS = "LOGOUT_SUCCESS",
+	REGISTER_SUCCESS = "REGISTER_SUCCESS",
+}
 export enum CategoryActionTypes {
 	CATEGORY_START_REQUEST = "CATEGORY_START_REQUEST",
 	DELETE_CATEGORIES_SUCCESS = "DELETE_CATEGORIES_SUCCESS",
@@ -108,6 +119,20 @@ interface ServerUserErrorAction {
 	type: CommonActionTypes.SERVER_USER_ERROR,
 	payload: any
 }
+interface AccountStartRequest {
+	type: AccountActionTypes.ACCOUNT_START_REQUEST,
+}
+interface LoginSuccessAction {
+	type: AccountActionTypes.LOGIN_SUCCESS,
+	token: string
+}
+interface LogoutSuccessAction {
+	type: AccountActionTypes.LOGOUT_SUCCESS,
+}
+interface RegisterSuccessAction {
+	type: AccountActionTypes.REGISTER_SUCCESS,
+	token: string
+}
 export interface ICategory {
 	id: number
 	name: string
@@ -151,7 +176,15 @@ export interface ILogin {
 	password: string,
 
 }
+export interface RegisterDTO {
+	firstName: string,
+	lastName: string,
+	email: string,
+	password: string,
+}
 export interface IRegister {
+	firstName: string,
+	lastName: string,
 	email: string,
 	password: string,
 	confirmPassword: string
@@ -169,7 +202,11 @@ export interface IProductState {
 	product: IProduct | null
 
 }
+export interface IAccountState {
+	token: string | null,
+	loading: boolean,
+}
 export type CommonActions = Error_MSG
 	| ServerUserErrorAction
+export type AccountActions = LoginSuccessAction | LogoutSuccessAction | RegisterSuccessAction | AccountStartRequest;
 
-export const ImageBase = "http://localhost:8080/files/";

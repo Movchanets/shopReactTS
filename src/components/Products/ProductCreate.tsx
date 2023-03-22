@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Editor } from '@tinymce/tinymce-react';
+import { FaTimes } from 'react-icons/fa';
 
 
 export default function CreateProduct() {
@@ -85,20 +86,69 @@ export default function CreateProduct() {
 		}
 		target.value = "";
 	}
-	const dataFileView: any = model.map((file, index) =>
-		<div key={index + '_item'} >
-			<img key={index} src={URL.createObjectURL(file)} />
-			<Button onClick={() => {
-				console.log(model)
-				console.log(index)
-				if (index > -1) { // only splice array when item is found
-					model.splice(index, 1);
-					let m = [...model];
-					setModel(m); // 2nd parameter means remove one item only
-				}
-			}} >Delete</Button>
+	const dataFileView = model.map((file, index) => (
+		<div key={index} className="mb-4 imageView">
+			<div className="hideSection">
+				<Link
+					className="text-sm"
+					to="#"
+					onClick={(e) => {
+						e.preventDefault();
+						if (index > -1) { // only splice array when item is found
+							model.splice(index, 1);
+							let m = [...model];
+							setModel(m); // 2nd parameter means remove one item only
+						}
+					}
+					}
+				>
+					<FaTimes className="m-2 text-3xl text-red-500" />
+				</Link>
+			</div>
+
+			<div className="relative">
+				<div style={{ height: "150px" }}>
+					<div className="picture-main">
+						<img
+							src={URL.createObjectURL(file)}
+							className="picture-container"
+							alt=""
+						/>
+					</div>
+				</div>
+			</div>
 		</div>
-	);
+	));
+	// const dataFileView: any = model.map((file, index) =>
+	// 	<div key={index + '_item'} className="mb-4 imageView">
+	// 		<div className="hideSection">
+	// 			<Link
+	// 				className="text-sm"
+	// 				to="#"
+	// 				onClick={(e) => {
+	// 					e.preventDefault();
+	// 					if (index > -1) { // only splice array when item is found
+	// 						model.splice(index, 1);
+	// 						let m = [...model];
+	// 						setModel(m); // 2nd parameter means remove one item only
+	// 					}
+	// 				}}
+	// 			>
+	// 				<FaTimes className="m-2 text-3xl text-red-500" />
+	// 			</Link>
+	// 		</div>
+	// 		<div className='picture-main' >
+
+	// 			<img
+	// 				key={index + '_img'}
+	// 				src={URL.createObjectURL(file)}
+	// 				className="picture-container"
+	// 				alt=""
+	// 			/>
+
+	// 		</div>
+	// 	</div>
+	// );
 	useEffect(() => {
 		console.log(category);
 		console.log(editorRef?.current?.getContent());
@@ -230,14 +280,11 @@ export default function CreateProduct() {
 											<label className="block text-sm font-medium text-gray-700">
 												Фото
 											</label>
-
+											<div className="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2 items-center gap-4">
+												{dataFileView}
+											</div>
 											<div className="mt-1 flex items-center">
-												<label
-													htmlFor="selectImage"
-													className="inline-block w-20 overflow-hidden bg-gray-100"
-												>
-													{dataFileView}
-												</label>
+
 												<label
 													htmlFor="selectImage"
 													className="ml-5 rounded-md border border-gray-300 bg-white 
@@ -312,7 +359,7 @@ export default function CreateProduct() {
 										</div> */}
 
 
-									<div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+									<div className="  bg-gray-50 px-4 py-3 text-right sm:px-6">
 										<button
 											disabled={!(isValid && dirty && model != null)}
 											type="submit"
