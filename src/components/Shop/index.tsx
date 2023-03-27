@@ -8,6 +8,7 @@ import { useActions } from '../../store/Action-Creators/useActions';
 
 import Loader from '../Loader';
 import { APP_ENV } from '../../env';
+import { Link } from 'react-router-dom';
 
 
 
@@ -49,6 +50,7 @@ const Shop: React.FC = () => {
 	const { categories, loading } = useTypedSelector((store) => store.categoryReducer)
 	const { Categories } = useActions();
 
+
 	useEffect(() => {
 		async function fetchData() {
 			await Categories();
@@ -65,7 +67,10 @@ const Shop: React.FC = () => {
 
 
 
-
+			<div>
+				<Link to="/Product">Categories</Link>
+				<Link to="/Category">Products</Link>
+			</div>
 			<div className="bg-gray-100">
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">

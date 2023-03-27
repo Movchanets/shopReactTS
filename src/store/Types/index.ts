@@ -124,14 +124,16 @@ interface AccountStartRequest {
 }
 interface LoginSuccessAction {
 	type: AccountActionTypes.LOGIN_SUCCESS,
-	token: string
+	token: string,
+	role: string
 }
 interface LogoutSuccessAction {
 	type: AccountActionTypes.LOGOUT_SUCCESS,
 }
 interface RegisterSuccessAction {
 	type: AccountActionTypes.REGISTER_SUCCESS,
-	token: string
+	token: string,
+	role: string
 }
 export interface ICategory {
 	id: number
@@ -205,6 +207,7 @@ export interface IProductState {
 export interface IAccountState {
 	token: string | null,
 	loading: boolean,
+	role: string | null,
 }
 export type CommonActions = Error_MSG
 	| ServerUserErrorAction

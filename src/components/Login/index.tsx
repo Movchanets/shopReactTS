@@ -30,22 +30,34 @@ import { LockClosedIcon } from '@heroicons/react/20/solid'
 import { LoginSchema } from '../Schemas'
 import { Field, Formik } from 'formik';
 import { ILogin } from '../../store/Types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { useActions } from '../../store/Action-Creators/useActions';
+import Loader from '../Loader';
 
 export default function Login() {
 	const initialValues = { email: '', password: '' };
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const { LoginUser } = useActions();
+	const navigate = useNavigate();
+	const { loading, token } = useTypedSelector((store) => store.accountReducer)
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		const data = new FormData(event.currentTarget);
 		const res: ILogin = { email: data.get('email') as string, password: data.get('password') as string }
 		console.log(res);
+		async function DoAction() {
+			await LoginUser(res);
 
-	};
+
+		};
+		await DoAction();
+		navigate('/');
+	}
 	return (
 		<>
-
+			{loading ? <Loader /> : null}
 			<div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 				<div className="w-full max-w-md space-y-8">
 					<div>

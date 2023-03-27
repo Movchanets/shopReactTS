@@ -15,7 +15,10 @@ import {
 	XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useTypedSelector } from '../../../hooks/useTypedSelector'
+import { Button } from 'reactstrap'
+import { useActions } from '../../../store/Action-Creators/useActions'
 
 const solutions = [
 	{
@@ -80,6 +83,13 @@ function classNames(...classes: any) {
 }
 
 export default function Example() {
+	const { LogoutUser } = useActions();
+	const { role } = useTypedSelector((store) => store.accountReducer)
+	const navigate = useNavigate();
+	const logout = async () => {
+		await LogoutUser();
+		navigate('/login')
+	}
 	return (
 		<Popover className="relative bg-white">
 			<div className="mx-auto max-w-7xl px-6">
@@ -246,14 +256,20 @@ export default function Example() {
 						</Popover>
 					</Popover.Group>
 					<div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-						<Link to="Login" className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
-							Sign in
-						</Link>
-						<Link to="Register"
-							className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-						>
-							Sign up
-						</Link>
+						{role === null ? <>
+							<Link to="Login" className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+								Sign in
+							</Link>
+							<Link to="Register"
+								className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+							>
+								Sign up
+							</Link>
+						</> :
+							<>
+								<Button onClick={logout} className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"> Logout </Button>
+							</>
+						}
 					</div>
 				</div>
 			</div>

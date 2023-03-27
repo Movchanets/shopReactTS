@@ -1,12 +1,14 @@
 
+import { getToken } from '../store/Action-Creators/Actions/accountActions';
 import { ICreateProduct, IEditProduct } from './../store/Types/index';
 
 import axios from "axios";
-
+const token = getToken();
 const instance = axios.create({
 	baseURL: "http://localhost:8080/api/products",
 	headers: {
 		"Content-Type": "application/json",
+		"Authorization": `Bearer ${token}`
 	},
 
 });

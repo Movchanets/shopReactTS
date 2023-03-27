@@ -3,7 +3,7 @@ import { LockClosedIcon } from '@heroicons/react/20/solid'
 import { LoginSchema, RegisterSchema } from '../Schemas'
 import { Field, Formik } from 'formik';
 import { ILogin, IRegister, RegisterDTO } from '../../store/Types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
 import { useActions } from '../../store/Action-Creators/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
@@ -12,6 +12,7 @@ import Loader from '../Loader';
 export default function Login() {
 	const initialValues = { email: '', password: '', confirmPassword: '', firstName: '', lastName: '' };
 	const { RegisterUser } = useActions();
+	const navigate = useNavigate();
 	const { loading } = useTypedSelector((store) => store.accountReducer);
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -24,8 +25,9 @@ export default function Login() {
 			lastName: data.get('lastName') as string,
 		}
 
-		console.log(res);
-		await RegisterUser(res)
+
+		await RegisterUser(res);
+		navigate('/');
 	}
 	return (
 		<>
