@@ -7,6 +7,7 @@ const instance = axios.create({
 	baseURL: "http://localhost:8080/account",
 	headers: {
 		"Content-Type": "application/json",
+
 	},
 
 });

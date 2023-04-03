@@ -1,15 +1,15 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Slide } from '@mui/material';
-import { useActions } from '../../store/Action-Creators/useActions';
-import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { useActions } from '../../../store/Action-Creators/useActions';
+import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { useEffect } from 'react';
-import { IProduct } from '../../store/Types';
+import { IProduct } from '../../../store/Types';
 import { Link } from 'react-router-dom';
 import { TransitionProps } from '@mui/material/transitions';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
-import { APP_ENV } from '../../env';
-import ModalDelete from '../Modal';
-import Loader from '../Loader';
+import { APP_ENV } from '../../../env';
+import ModalDelete from '../../Modal';
+import Loader from '../../Loader';
 
 export const ProductDashboard = () => {
 

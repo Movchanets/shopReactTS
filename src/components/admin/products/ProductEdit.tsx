@@ -1,16 +1,16 @@
-import { Field, Formik } from 'formik';
-import { ProductSchema } from '../Schemas';
-import { ICategory, ICategoryDTO, ICreateProduct, IEditProduct, IProduct } from '../../store/Types';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { Button, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { useActions } from '../../store/Action-Creators/useActions';
-import { useTypedSelector } from '../../hooks/useTypedSelector';
-import Loader from '../Loader';
-import { useNavigate, useParams } from 'react-router';
-import React from 'react';
+import { TextField } from '@mui/material';
+import { Formik, Field } from 'formik';
+import { useState, useEffect, ChangeEvent } from 'react';
+import { FaTrash } from 'react-icons/fa';
+import { useParams, useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
-import { APP_ENV } from '../../env';
-import { FaTrash } from 'react-icons/fa'
+import { Button } from 'reactstrap';
+import { APP_ENV } from '../../../env';
+import { useTypedSelector } from '../../../hooks/useTypedSelector';
+import { useActions } from '../../../store/Action-Creators/useActions';
+import { IEditProduct } from '../../../store/Types';
+import Loader from '../../Loader';
+import { ProductSchema } from '../../Schemas';
 
 export default function EditProduct() {
 	const params = useParams();

@@ -8,27 +8,42 @@ import { TextField } from '@mui/material';
 import { useActions } from '../../store/Action-Creators/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import Loader from '../Loader';
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { useEffect } from 'react';
 
-export default function Login() {
+export const Register = () => {
+
+	return (
+		<GoogleReCaptchaProvider reCaptchaKey="6LfT4kAlAAAAAEHq6QPyv3Yo2_UwFanxFX0ibBWs">
+
+			<RegisterPage />
+		</GoogleReCaptchaProvider>
+	);
+}
+function RegisterPage() {
 	const initialValues = { email: '', password: '', confirmPassword: '', firstName: '', lastName: '' };
 	const { RegisterUser } = useActions();
 	const navigate = useNavigate();
+	const { executeRecaptcha } = useGoogleReCaptcha();
 	const { loading } = useTypedSelector((store) => store.accountReducer);
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
+		if (!executeRecaptcha) { return; }
 		const data = new FormData(event.currentTarget);
 		const res: RegisterDTO = {
 			email: data.get('email') as string,
 			password: data.get('password') as string,
 			firstName: data.get('firstName') as string,
 			lastName: data.get('lastName') as string,
+			reCaptchaToken: await executeRecaptcha()
 		}
 
-
+		console.log(res);
 		await RegisterUser(res);
 		navigate('/');
 	}
+
 	return (
 		<>
 			{loading ? <Loader /> : null}

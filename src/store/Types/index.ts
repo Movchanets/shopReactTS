@@ -124,16 +124,14 @@ interface AccountStartRequest {
 }
 interface LoginSuccessAction {
 	type: AccountActionTypes.LOGIN_SUCCESS,
-	token: string,
-	role: string
+	user: IUser
 }
 interface LogoutSuccessAction {
 	type: AccountActionTypes.LOGOUT_SUCCESS,
 }
 interface RegisterSuccessAction {
 	type: AccountActionTypes.REGISTER_SUCCESS,
-	token: string,
-	role: string
+	user: IUser
 }
 export interface ICategory {
 	id: number
@@ -176,13 +174,24 @@ export interface IEditProduct {
 export interface ILogin {
 	email: string,
 	password: string,
-
+	reCaptchaToken: string
+}
+export interface IUser {
+	email: string,
+	phone: string,
+	image: string,
+	roles: string[],
+}
+export interface IAuthUser {
+	isAuth: boolean,
+	user: IUser | null,
 }
 export interface RegisterDTO {
 	firstName: string,
 	lastName: string,
 	email: string,
 	password: string,
+	reCaptchaToken: string
 }
 export interface IRegister {
 	firstName: string,
@@ -205,9 +214,10 @@ export interface IProductState {
 
 }
 export interface IAccountState {
-	token: string | null,
+
 	loading: boolean,
-	role: string | null,
+	isAuth: boolean,
+	user?: IUser,
 }
 export type CommonActions = Error_MSG
 	| ServerUserErrorAction

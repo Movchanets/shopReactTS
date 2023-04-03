@@ -7,10 +7,20 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { store } from './store';
+import { getToken } from './store/Action-Creators/Actions/accountActions';
+import jwtDecode from 'jwt-decode';
+import { AccountActionTypes, IUser } from './store/Types';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+if (localStorage.token) {
+  const token = localStorage.token;
+  const user: IUser = jwtDecode(token) as IUser;
+  store.dispatch({ type: AccountActionTypes.LOGIN_SUCCESS, user: user })
+}
+
 root.render(
   <Provider store={store}>
     <BrowserRouter>

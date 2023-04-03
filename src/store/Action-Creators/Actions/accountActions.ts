@@ -1,5 +1,5 @@
 import { LoginSchema } from './../../../components/Schemas/index';
-import { CommonActions, RegisterDTO, AccountActions, AccountActionTypes, CommonActionTypes } from './../../Types/index';
+import { CommonActions, RegisterDTO, AccountActions, AccountActionTypes, CommonActionTypes, IUser } from './../../Types/index';
 import { Login, RegisterAccount } from '../../../axios/AccountController';
 import { ILogin, IRegister } from '../../Types';
 import { Dispatch } from 'react';
@@ -13,14 +13,11 @@ export const RegisterUser = (user: RegisterDTO) => {
 			const data = await RegisterAccount(user);
 			const { response } = data;
 			const token = response.data.token;
-			const decoded: any = jwt_decode(token);
-			console.log(decoded.roles as Array<string>);
-			if (decoded.roles.includes("ADMIN")) {
-				dispatch({ type: AccountActionTypes.REGISTER_SUCCESS, token: token, role: "ADMIN" });
-			}
-			else {
-				dispatch({ type: AccountActionTypes.REGISTER_SUCCESS, token: token, role: "USER" });
-			}
+
+			const ReduxUser: IUser = jwt_decode(token) as IUser;
+
+			dispatch({ type: AccountActionTypes.REGISTER_SUCCESS, user: ReduxUser });
+
 			saveToken(response.data.token)
 		}
 		catch (e) {
@@ -42,15 +39,13 @@ export const LoginUser = (user: ILogin) => {
 			const { response } = data;
 			const token = response.data.token;
 
-			const decoded: any = jwt_decode(token);
-			console.log(decoded.roles as Array<string>);
-			if (decoded.roles.includes("ADMIN")) {
-				dispatch({ type: AccountActionTypes.LOGIN_SUCCESS, token: token, role: "ADMIN" });
 
-			}
-			else {
-				dispatch({ type: AccountActionTypes.LOGIN_SUCCESS, token: token, role: "USER" });
-			}
+
+			const ReduxUser: IUser = jwt_decode(token) as IUser;
+
+
+			dispatch({ type: AccountActionTypes.LOGIN_SUCCESS, user: ReduxUser });
+
 			saveToken(response.data.token)
 		}
 		catch (e) {

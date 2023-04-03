@@ -1,16 +1,15 @@
-import { Field, Formik } from 'formik';
-import { ProductSchema } from '../Schemas';
-import { ICategory, ICategoryDTO, ICreateProduct } from '../../store/Types';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { Button, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { useActions } from '../../store/Action-Creators/useActions';
-import { useTypedSelector } from '../../hooks/useTypedSelector';
-import Loader from '../Loader';
-import { useNavigate } from 'react-router';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { TextField } from '@mui/material';
 import { Editor } from '@tinymce/tinymce-react';
+import { Formik, Field } from 'formik';
+import { useEffect, useState, ChangeEvent, useRef } from 'react';
 import { FaTimes } from 'react-icons/fa';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
+import { useTypedSelector } from '../../../hooks/useTypedSelector';
+import { useActions } from '../../../store/Action-Creators/useActions';
+import { ICreateProduct } from '../../../store/Types';
+import Loader from '../../Loader';
+import { ProductSchema } from '../../Schemas';
 
 
 export default function CreateProduct() {

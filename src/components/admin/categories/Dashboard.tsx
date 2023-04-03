@@ -1,14 +1,14 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from '@mui/material';
-import { useActions } from '../../store/Action-Creators/useActions';
-import { useTypedSelector } from '../../hooks/useTypedSelector';
-import { useEffect } from 'react';
-import { ICategory } from '../../store/Types';
-import { Link } from 'react-router-dom';
 import { TransitionProps } from '@mui/material/transitions';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React from 'react';
-import { APP_ENV } from '../../env';
-import Loader from '../Loader';
+import { GridColDef, DataGrid } from '@mui/x-data-grid';
+import React, { useEffect } from 'react';
+
+import { Link } from 'react-router-dom';
+import { useTypedSelector } from '../../../hooks/useTypedSelector';
+import { useActions } from '../../../store/Action-Creators/useActions';
+import { APP_ENV } from '../../../env';
+import { ICategory } from '../../../store/Types';
+import Loader from '../../Loader';
 
 export const Dashboard = () => {
 
@@ -99,7 +99,7 @@ export const Dashboard = () => {
 
 			renderCell: (params) => {
 
-				return (<Button><Link to={`/Category/Edit/` + params.row.id} >Edit</Link> </Button>);
+				return (<Button><Link to={`/admin/Category/Edit/` + params.row.id} >Edit</Link> </Button>);
 
 			}
 		}
@@ -124,7 +124,7 @@ export const Dashboard = () => {
 				/>
 			</div>
 			<div>
-				<Button><Link to={`/Category/Create`}
+				<Button><Link to={`/admin/Category/Create`}
 					className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 
 				>Create new Category</Link> </Button>

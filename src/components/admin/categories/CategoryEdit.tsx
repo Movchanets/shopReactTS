@@ -1,15 +1,17 @@
-import { Field, Formik } from 'formik';
-import { CategorySchema } from '../Schemas';
-import { ICategoryDTO } from '../../store/Types';
-import { useEffect, useState } from 'react';
 import { Input, TextField } from '@mui/material';
-import { useActions } from '../../store/Action-Creators/useActions';
-import { useTypedSelector } from '../../hooks/useTypedSelector';
-import Loader from '../Loader';
-import { useNavigate, useParams } from 'react-router';
-import React from 'react';
+import { Formik, Field } from 'formik';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
-import { APP_ENV } from '../../env';
+import { APP_ENV } from '../../../env';
+import { useTypedSelector } from '../../../hooks/useTypedSelector';
+import { useActions } from '../../../store/Action-Creators/useActions';
+import { ICategoryDTO } from '../../../store/Types';
+import Loader from '../../Loader';
+import { CategorySchema } from '../../Schemas';
+
+
+
 
 export default function EditCategory() {
 	const params = useParams();

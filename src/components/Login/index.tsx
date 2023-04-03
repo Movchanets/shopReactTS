@@ -1,157 +1,171 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-	// ...
-	plugins: [
-	  // ...
-	  require('@tailwindcss/forms'),
-	],
-  }
-  ```
-*/
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-	// ...
-	plugins: [
-	  // ...
-	  require('@tailwindcss/forms'),
-	],
-  }
-  ```
-*/
+
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 import { LoginSchema } from '../Schemas'
 import { Field, Formik } from 'formik';
 import { ILogin } from '../../store/Types';
 import { Link, useNavigate } from 'react-router-dom';
-import { TextField } from '@mui/material';
-import { useTypedSelector } from '../../hooks/useTypedSelector';
+
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { useEffect, useState } from 'react';
+import { FcGoogle } from "react-icons/fc";
+import loginImg from "../../assets/login.jpg";
+import { useFormik } from "formik";
+import axios from "axios";
+import { APP_ENV } from '../../env';
 import { useActions } from '../../store/Action-Creators/useActions';
-import Loader from '../Loader';
+import { TextField } from '@mui/material';
+import GoogleButton from 'react-google-button';
 
-export default function Login() {
-	const initialValues = { email: '', password: '' };
+const Login = () => {
+
+	return (
+		<GoogleReCaptchaProvider reCaptchaKey="6LfT4kAlAAAAAEHq6QPyv3Yo2_UwFanxFX0ibBWs">
+			<LoginPage />
+		</GoogleReCaptchaProvider>
+	);
+}
+
+
+
+
+const LoginPage = () => {
+
+
+	const { executeRecaptcha } = useGoogleReCaptcha();
+
+	const initValues: ILogin = {
+		email: "",
+		password: "",
+		reCaptchaToken: ""
+	};
+
 	const { LoginUser } = useActions();
-	const navigate = useNavigate();
-	const { loading, token } = useTypedSelector((store) => store.accountReducer)
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-
-		const data = new FormData(event.currentTarget);
-		const res: ILogin = { email: data.get('email') as string, password: data.get('password') as string }
-		console.log(res);
-		async function DoAction() {
-			await LoginUser(res);
-
-
-		};
-		await DoAction();
-		navigate('/');
+	const navigator = useNavigate();
+	const responseGoogle = (response: any) => {
+		console.log(response);
 	}
+	const handleLoginSuccess = (res: any) => {
+
+		console.log("Login google result", res);
+		const { credential } = res;
+		console.log("Token Idsss", credential);
+
+		//GoogleLogin(credential, 'Google')
+
+	}
+
+	useEffect(() => {
+		console.log(window);
+		const clientId =
+			"143421263160-084q981ptbv0a391tpr2thhf9au8csi9.apps.googleusercontent.com";
+		window?.google?.accounts!.id.initialize({
+			client_id: clientId,
+			callback: handleLoginSuccess,
+		});
+
+		window?.google?.accounts!.id.renderButton(document.getElementById("loginGoogleBtn"),
+			{ theme: "outline", size: "Large" });
+
+	}, []);
+	const onSubmitFormik = async (values: ILogin) => {
+
+		const DoLogin = async () => {
+			const data = await LoginUser(values)
+		}
+		try {
+			if (!executeRecaptcha)
+				return;
+			//Перевірка чи пройшов перевірку гугл, користувач, чи не є він бот  
+			values.reCaptchaToken = await executeRecaptcha();
+
+			await DoLogin();
+			console.log("Login user token", values.reCaptchaToken);
+			navigator("/");
+		} catch (error: any) {
+			console.log("Щось пішло не так", error);
+		}
+	}
+
+	const formik = useFormik({
+		initialValues: initValues,
+		onSubmit: onSubmitFormik,
+		validationSchema: LoginSchema
+	});
+
+	const { values, errors, touched, handleSubmit, handleChange, setFieldValue } = formik;
+
 	return (
 		<>
-			{loading ? <Loader /> : null}
-			<div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-				<div className="w-full max-w-md space-y-8">
-					<div>
-						<img
-							className="mx-auto h-12 w-auto"
-							src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-							alt="ShopApp"
-						/>
-						<h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-							Sign in to your account
-						</h2>
-						<p className="mt-2 text-center text-sm text-gray-600">
-							Or{' '}
-							<Link to="/Register" className="font-medium text-indigo-600 hover:text-indigo-500">
-								Register
-							</Link>
+			<div className="relative w-full h-screen bg-zinc-900/90">
+				<img
+					className="absolute w-full h-full object-cover mix-blend-overlay"
+					src={loginImg}
+					alt="/"
+				/>
+
+				<div className="flex justify-center py-10 ">
+					<form className="max-w-[400px] w-full mx-auto bg-white p-8" onSubmit={handleSubmit}>
+						<h2 className="text-3xl font-bold text-center py-2">Вхід на сайт</h2>
+
+						<div className="flex flex-col mb-4">
+							<label>Username</label>
+							<TextField className="border relative bg-gray-100 p-2"
+								type="text"
+								name="email"
+								id="email"
+								onChange={handleChange}
+								value={values.email}
+							/>
+							{errors.email &&
+								<p className="mt-2 text-sm text-red-600 dark:text-red-500">
+									<span className="font-medium">{errors.email}</span>
+
+								</p>
+							}
+						</div>
+						<div className="flex flex-col ">
+							<label>Password</label>
+							<TextField
+								className="border relative bg-gray-100 p-2"
+								type="password"
+								name="password"
+								id="password"
+								onChange={handleChange}
+								value={values.password}
+							/>
+							{errors.password &&
+								<p className="mt-2 text-sm text-red-600 dark:text-red-500">
+									<span className="font-medium">{errors.password}</span>
+
+								</p>
+							}
+						</div>
+						<button className="w-full py-3 mt-8 bg-indigo-600 hover:bg-indigo-500 relative text-white">
+							Sign In
+						</button>
+						<p className="flex items-center mt-2">
+							<input className="mr-2" type="checkbox" />
+							Remember Me
 						</p>
-					</div>
-					<Formik
-						initialValues={initialValues}
-						onSubmit={() => {
+						<Link to="/" className="relative">
+							<p className="text-center mt-8">Not a member? Sign up now</p>
+						</Link>
 
-						}}
-						validationSchema={LoginSchema}
-					>
-						{({ errors, touched, isSubmitting, isValid, dirty }) => (
-							<form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-								<input type="hidden" name="remember" defaultValue="true" />
-								<div className="-space-y-px rounded-md shadow-sm">
-									<div>
-										<label htmlFor="email-address" className="sr-only">
-											Email address
-										</label>
-										<Field
-											as={TextField}
-											id="email-address"
-											name="email"
-											type="email"
-											label="Email"
-											autoComplete="email"
-											required
-											className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-											placeholder="Email address"
-										/>
-										{errors.email && touched.email ? (
-											<div style={{ color: "red" }}>{errors.email}</div>
-										) : null}
-									</div>
-									<div>
-										<label htmlFor="password" className="sr-only">
-											Password
-										</label>
-										<Field
-											as={TextField}
-											id="password"
-											name="password"
-											type="password"
-											autoComplete="current-password"
-											required
-											className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-											placeholder="Password"
-										/>
-										{errors.password && touched.password ? (
-											<div style={{ color: "red" }}>{errors.password}</div>
-										) : null}
-									</div>
-								</div>
+						<div className="flex justify-between py-8">
+							{/* <p className="border shadow-lg hover:shadow-xl px-6 py-2 relative flex items-center">
+                <AiFillFacebook className="mr-2" /> Facebook
+              </p> */}
+							<div id="loginGoogleBtn">
 
-								<div className="flex items-center justify-between">
+							</div>
 
-
-									<div className="text-sm">
-										<a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-											Forgot your password?
-										</a>
-									</div>
-								</div>
-
-								<div>
-									<button
-										type="submit"
-										className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-									>
-										<span className="absolute inset-y-0 left-0 flex items-center pl-3">
-											<LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
-										</span>
-										Sign up
-									</button>
-								</div>
-							</form>
-						)}
-					</Formik>
+						</div>
+					</form>
 				</div>
 			</div>
 		</>
-	)
-}
+	);
+};
+
+
+export default Login;

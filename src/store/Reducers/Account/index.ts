@@ -4,10 +4,8 @@ import { IAccountState } from '../../Types';
 
 
 const initialState: IAccountState = {
-	token: null,
 	loading: false,
-	role: null
-
+	isAuth: false,
 };
 
 export const accountReducer = (state = initialState, action: any): IAccountState => {
@@ -19,15 +17,16 @@ export const accountReducer = (state = initialState, action: any): IAccountState
 		case AccountActionTypes.LOGIN_SUCCESS:
 
 			return {
-				role: action.role, token: action.token, loading: false
+				...state, isAuth: true, loading: false, user: action.user
 			};
+
 		case AccountActionTypes.LOGOUT_SUCCESS:
 			return {
-				...state, token: null, loading: false, role: null
+				...state, loading: false, isAuth: false, user: undefined
 			};
 		case AccountActionTypes.REGISTER_SUCCESS:
 			return {
-				...state, token: action.token, loading: false
+				...state, loading: false
 			};
 		default:
 			return state;

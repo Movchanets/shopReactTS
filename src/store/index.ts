@@ -1,13 +1,16 @@
 import { accountReducer } from './Reducers/Account/index';
 import { productReducer } from './Reducers/Product/index';
 import { categoryReducer } from './Reducers/Category/index';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { composeWithDevTools } from "redux-devtools-extension";
+import { combineReducers } from 'redux';
 import thunk from "redux-thunk";
+import { configureStore } from '@reduxjs/toolkit';
 
 export const rootReducer = combineReducers({
 	categoryReducer, productReducer, accountReducer
 });
 
-export const store = createStore(rootReducer,
-	composeWithDevTools(applyMiddleware(thunk)));
+export const store = configureStore({
+	reducer: rootReducer,
+	middleware: [thunk],
+	devTools: true
+});

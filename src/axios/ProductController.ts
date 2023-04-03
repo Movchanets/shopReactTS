@@ -12,6 +12,12 @@ const instance = axios.create({
 	},
 
 });
+if (token) {
+	instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+else {
+	delete instance.defaults.headers.common['Authorization'];
+}
 const responseBody: any = (response: any) => response.data;
 const requests = {
 	get: (url: string) => instance.get(url).then().then(responseBody),
