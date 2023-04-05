@@ -24,11 +24,13 @@ import AdminLayout from './components/Containers/admin';
 import CreateCategory from './components/admin/categories/CategoryCreate';
 import EditCategory from './components/admin/categories/CategoryEdit';
 import { Dashboard } from './components/admin/categories/Dashboard';
+import { Profile } from './components/Profile';
 
 
 declare global {
   interface Window {
-    google: any; // 👈️ turn off type checking
+    google: any;
+    [key: string]: any;
   }
 }
 
@@ -46,7 +48,7 @@ function App() {
         <Route path='Register' element={<Register />} />
         <Route path='Product/list' element={<ProductListPage />} />
         <Route path='Product/:id' element={<Product />} />
-
+        <Route path='Profile' element={<Profile />} />
 
       </Route>
       <Route path='/admin/' element={<AdminLayout />}>

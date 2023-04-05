@@ -1,5 +1,5 @@
 
-import { ICreateProduct, IEditProduct, ILogin, IRegister, RegisterDTO } from './../store/Types/index';
+import { ICreateProduct, IEditProduct, ILoadAvatar, ILogin, IRegister, RegisterDTO } from './../store/Types/index';
 
 import axios from "axios";
 
@@ -26,6 +26,22 @@ const requests = {
 const Account = {
 	register: (user: RegisterDTO) => instance.post(`/register`, user),
 	login: (user: ILogin) => instance.post(`/login`, user),
+	googleAuth(token: string) {
+		return instance.post(`/google-auth`, { token: token });
+	},
+	changeAvatar: (data: ILoadAvatar) => instance.post(`/set-avatar`, data),
+}
+export async function ChangeAvatar(ava: ILoadAvatar) {
+	const data = await Account.changeAvatar(ava)
+		.then((response) => {
+			return {
+				response,
+			};
+		})
+		.catch((error) => {
+			return error.response;
+		});
+	return data;
 }
 
 export async function RegisterAccount(user: RegisterDTO) {
@@ -43,6 +59,18 @@ export async function RegisterAccount(user: RegisterDTO) {
 }
 export async function Login(user: ILogin) {
 	const data = await Account.login(user)
+		.then((response) => {
+			return {
+				response,
+			};
+		})
+		.catch((error) => {
+			return error.response;
+		});
+	return data;
+}
+export async function Google(token: string) {
+	const data = await Account.googleAuth(token)
 		.then((response) => {
 			return {
 				response,

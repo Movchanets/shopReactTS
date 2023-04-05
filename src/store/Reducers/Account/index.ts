@@ -28,6 +28,10 @@ export const accountReducer = (state = initialState, action: any): IAccountState
 			return {
 				...state, loading: false
 			};
+		case AccountActionTypes.CHANGE_AVATAR_SUCCESS:
+			return {
+				...state, loading: false, user: action.user
+			};
 		default:
 			return state;
 	};

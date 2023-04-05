@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 export enum CommonActionTypes {
 
 	ERROR_MSG = "ERROR_MSG",
@@ -13,6 +14,7 @@ export enum AccountActionTypes {
 	EDIT_ACCOUNT_SUCCESS = "EDIT_ACCOUNT_SUCCESS",
 	LOGIN_SUCCESS = "LOGIN_SUCCESS",
 	LOGOUT_SUCCESS = "LOGOUT_SUCCESS",
+	CHANGE_AVATAR_SUCCESS = "CHANGE_AVATAR_SUCCESS",
 	REGISTER_SUCCESS = "REGISTER_SUCCESS",
 }
 export enum CategoryActionTypes {
@@ -36,6 +38,10 @@ interface CreateProductActionSuccess {
 	type: ProductActionTypes.CREATE_PRODUCT_SUCCESS,
 	message: any,
 	product: IProduct
+}
+interface ChangeAvatarActionSuccess {
+	type: AccountActionTypes.CHANGE_AVATAR_SUCCESS,
+	user: IUser
 }
 interface EditProductActionSuccess {
 	type: ProductActionTypes.EDIT_PRODUCT_SUCCESS,
@@ -180,7 +186,14 @@ export interface IUser {
 	email: string,
 	phone: string,
 	image: string,
+	iss: string,
 	roles: string[],
+}
+export interface ILoadAvatar {
+
+	email: string,
+	base64: string
+
 }
 export interface IAuthUser {
 	isAuth: boolean,
@@ -221,5 +234,9 @@ export interface IAccountState {
 }
 export type CommonActions = Error_MSG
 	| ServerUserErrorAction
-export type AccountActions = LoginSuccessAction | LogoutSuccessAction | RegisterSuccessAction | AccountStartRequest;
+export type AccountActions = LoginSuccessAction
+	| LogoutSuccessAction
+	| RegisterSuccessAction
+	| ChangeAvatarActionSuccess
+	| AccountStartRequest;
 

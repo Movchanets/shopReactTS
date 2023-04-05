@@ -39,18 +39,18 @@ const LoginPage = () => {
 		reCaptchaToken: ""
 	};
 
-	const { LoginUser } = useActions();
+	const { LoginUser, GoogleLogin } = useActions();
 	const navigator = useNavigate();
 	const responseGoogle = (response: any) => {
 		console.log(response);
 	}
-	const handleLoginSuccess = (res: any) => {
+	const handleLoginSuccess = async (res: any) => {
 
 		console.log("Login google result", res);
 		const { credential } = res;
 		console.log("Token Idsss", credential);
 
-		//GoogleLogin(credential, 'Google')
+		await GoogleLogin(credential)
 
 	}
 
