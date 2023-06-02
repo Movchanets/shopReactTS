@@ -15,7 +15,7 @@ import { ProductDashboard } from './components/admin/products/Dashboard';
 
 import ProductListPage from './components/Shop/Products/ProductListPage';
 import Product from './components/Shop/Products';
-import { useTypedSelector } from './hooks/useTypedSelector';
+
 import { Register } from './components/Register';
 import CreateProduct from './components/admin/products/ProductCreate';
 import EditProduct from './components/admin/products/ProductEdit';
